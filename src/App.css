@@ -1,18 +1,30 @@
-.App {
-  text-align: center;
+
+body{ font-family: "Poppins"}
+h1,
+h2,
+h3,
+h4 {
+  font-weight: bold;
+  color: #25441B;
 }
 
+.container {
+  width: 1120px;
+  margin: auto;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
+
+.slider{width: 100%; overflow: hidden;}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
 }
-
+.pointer { cursor: pointer; }
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

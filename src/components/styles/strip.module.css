@@ -1,0 +1,128 @@
+.strip {
+    background-size: cover;
+    background-position: center;
+    margin-top: 40px;
+    margin-bottom: -97px;
+    position: relative;
+}
+
+.img {
+    width: 354px;
+    position: relative;
+    right: 0;
+    top: -56px;
+    z-index: 20;
+
+}
+
+.img_wrap {
+    position: relative;
+    height: 180px;
+}
+
+.bestFood {
+    background-size: contain;
+    z-index: 2;
+    position: relative;
+    padding-top: 149px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.num {
+    color: #0D7A52;
+    font-weight: bold;
+    font-size: 40px;
+}
+
+.title {
+    color: #8DCA57;
+}
+
+.info {
+    font-size: 13px;
+}
+
+._50perc {
+    color: #F9DA31;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.off {
+    font-size: 40px
+}
+
+.shop {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.popul {
+    font-size: 26px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.blog_desc {
+    font-size: 12px
+}
+
+.moreBtn {
+    background-color: #8DCA57
+}
+
+.newsletter {
+    border-radius: 8px;
+    margin: auto;
+    max-width: 850px
+}
+
+.ifn {
+    color: #0E7A52;
+    font-size: 12px;
+}
+
+.newsletter_wrapper {
+    background-color: #0E7A52;
+    max-width: 650px;
+    margin: auto;
+}
+
+.newsLetterBtn {
+    background-color: #8DCA57;
+}
+
+.input_news_letter {
+    background-color: #0E7A52;
+    border: medium none;
+}
+
+.input_news_letter:focus-visible {
+    outline: none;
+}
+
+.newsl {
+    background-size: 100%;
+    background-position: center bottom;
+    margin-bottom: -93px;
+}
+
+.footer_title {
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.footer_text {
+    font-size: 12px
+}
+
+.footerTop {
+    padding-top: 140px;
+    position: relative;
+    background-position: center top;
+    background-size: cover;
+    padding-bottom:30px
+}
