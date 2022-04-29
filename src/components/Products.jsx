@@ -91,6 +91,7 @@ const Products = () => {
           "Loading"
         ) : (
           <>
+          
             <ProductCard groceries={groceries.slice(0,20)} />
             <div className=" text-center">Load more</div>
           </>
