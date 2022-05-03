@@ -92,7 +92,7 @@ const Products = () => {
         ) : (
           <>
             <ProductCard groceries={groceries.slice(0,20)} />
-            <div className=" text-center">Load more</div>
+            <div className="text-center">Load more </div>
           </>
         )}
       </div>
