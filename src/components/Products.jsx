@@ -86,7 +86,7 @@ const Products = () => {
               <div className="small text-capitalize">{tab.title}</div>
             </div>
           ))}
-        </div>
+        </div> 
         {fetching === true ? (
           "Loading"
         ) : (
