@@ -14,18 +14,19 @@ import clsx from "clsx";
 
 const Products = () => {
   const tabs = [
-    { title: "vegetables", icon: vegeIcon },
-    { title: "fruits", icon: fruitIcon },
-    { title: "Meats and fish", icon: meatFishIcon },
-    { title: "offers", icon: offersIcon },
-    { title: "Ryans garden", icon: ryanIcon },
-    { title: "spices", icon: spiceIcon },
-    { title: "staples food", icon: stapleIcon },
+    { title: "vegetables", icon: vegeIcon, id: 0 },
+    { title: "fruits", icon: fruitIcon, id: 1 },
+    { title: "Meats and fish", icon: meatFishIcon, id: 2 },
+    { title: "offers", icon: offersIcon, id: 3 },
+    { title: "Ryans garden", icon: ryanIcon, id: 4 },
+    { title: "spices", icon: spiceIcon, id: 5 },
+    { title: "staples food", icon: stapleIcon, id: 6 },
   ];
   const [activeTab, setActiveTab] = useState(0);
   const [groceries, setGroceries] = useState([]);
   const [activeGroceryList, setActiveGroceryList] = useState([]);
   const [fetching, setFetching] = useState(true);
+
   useEffect(() => {
     onValue(ref(firebase, "Groceries"), (snapshot) => {
       const data = snapshot.val();
@@ -41,28 +42,50 @@ const Products = () => {
   useEffect(() => {
     let activeList = [];
     if (groceries.length > 0) {
-      if (activeTab === 0) {
-        const list = groceries.filter(
-          (grocery) => grocery.category.toLowerCase() === "vegetables"
-        );
-        console.log("my list");
-        console.log(list);
-        setActiveGroceryList([...list]);
-      } else if (activeTab === 1) {
-        const list = groceries.filter(
-          (grocery) => grocery.category.toLowerCase() === "fruits"
-        );
-        activeList.push([...list]);
-      } else if (activeTab === 2) {
-        const list = groceries.filter(
-          (grocery) => grocery.category.toLowerCase() === "meat and fish"
-        );
-        activeList.push([...list]);
-      }
+      switch (activeTab) {
+        case 0:
+          activeList = groceries.filter((grocery) =>
+            grocery.category.toLowerCase().includes("vegetables")
+          );
+          return setActiveGroceryList(activeList);
 
-      setActiveGroceryList(activeList);
+        case 1:
+          activeList = groceries.filter((grocery) =>
+            grocery.category.toLowerCase().includes("fruits")
+          );
+          return setActiveGroceryList(activeList);
+
+        case 2:
+          setActiveGroceryList([]);
+          activeList = groceries.filter((grocery) =>
+            grocery.category.toLowerCase().includes("meats")
+          );
+          return setActiveGroceryList(activeList);
+        case 3:
+          activeList = groceries.filter((grocery) =>
+            grocery.category.toLowerCase().includes("offers")
+          );
+          return setActiveGroceryList(activeList);
+        case 4:
+          activeList = groceries.filter((grocery) =>
+            grocery.category.toLowerCase().includes("ryans garden")
+          );
+          return setActiveGroceryList(activeList);
+        case 5:
+          activeList = groceries.filter((grocery) =>
+            grocery.category.toLowerCase().includes("spices")
+          );
+          return setActiveGroceryList(activeList);
+        case 6:
+          activeList = groceries.filter((grocery) =>
+            grocery.category.toLowerCase().includes("more groceries")
+          );
+          return setActiveGroceryList(activeList);
+        default:
+          return;
+      }
     }
-  }, [groceries, activeTab]);
+  }, [activeTab, groceries]);
   return (
     <>
       <div className="container text-center mt-5">
@@ -72,26 +95,26 @@ const Products = () => {
           blanditiis praesentium.
         </p>
         <div className="d-flex align-items-center justify-content-between mt-5 flex-wrap">
-          {tabs.map((tab, index) => (
+          {tabs.map((tab) => (
             <div
               className={clsx(
-                activeTab === index ? Styles.activeTab : "",
+                activeTab === tab.id ? Styles.activeTab : "",
                 Styles.tab,
                 "d-flex align-items-center justify-content-center flex-column pb-2 pointer"
               )}
-              key={index}
-              onClick={() => setActiveTab(index)}
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
             >
               <img src={tab.icon} width="100px" />
               <div className="small text-capitalize">{tab.title}</div>
             </div>
           ))}
-        </div> 
+        </div>
         {fetching === true ? (
           "Loading"
         ) : (
           <>
-            <ProductCard groceries={groceries.slice(0,20)} />
+            <ProductCard groceries={activeGroceryList.slice(0, 30)} />
             <div className="text-center">Load more </div>
           </>
         )}
@@ -139,7 +162,7 @@ export const ProductCard = ({ groceries }) => {
 
             <div className="small fw-bold">UGX {grocery.itemPrice}</div>
             <div className="small text-capitalize">Per {grocery.unit}</div>
-            <div className="small text-capitalize">Per {grocery.category}</div>
+            <div className="small text-capitalize">{grocery.category}</div>
             {grocery.availability === "In Stock" ? (
               <>
                 {" "}
