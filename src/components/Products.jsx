@@ -19,7 +19,7 @@ const Products = () => {
     { title: "Meats and fish", icon: meatFishIcon, id: 2 },
     { title: "offers", icon: offersIcon, id: 3 },
     { title: "Ryans garden", icon: ryanIcon, id: 4 },
-    { title: "spices", icon: spiceIcon, id: 5 },
+    { title:"Cooking essentials", icon: spiceIcon, id: 5 },
     { title: "staples food", icon: stapleIcon, id: 6 },
   ];
   const [activeTab, setActiveTab] = useState(0);
@@ -73,7 +73,7 @@ const Products = () => {
           return setActiveGroceryList(activeList);
         case 5:
           activeList = groceries.filter((grocery) =>
-            grocery.category.toLowerCase().includes("spices")
+            grocery.category.toLowerCase().includes("cooking")
           );
           return setActiveGroceryList(activeList);
         case 6:
