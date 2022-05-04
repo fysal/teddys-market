@@ -11,6 +11,7 @@ import meatFishIcon from "../assets/icons/meat-fish.png";
 import cartIcon from "../assets/icons/shopping-bag.png";
 import Styles from "./styles/product.module.css";
 import clsx from "clsx";
+import SpinLoader from "./SpinLoader";
 
 const Products = () => {
   const tabs = [
@@ -73,7 +74,7 @@ const Products = () => {
           return setActiveGroceryList(activeList);
         case 5:
           activeList = groceries.filter((grocery) =>
-            grocery.category.toLowerCase().includes("cooking")
+            grocery.category.toLowerCase().includes("cooking essentials")
           );
           return setActiveGroceryList(activeList);
         case 6:
@@ -111,7 +112,7 @@ const Products = () => {
           ))}
         </div>
         {fetching === true ? (
-          "Loading"
+         <SpinLoader />
         ) : (
           <>
             <ProductCard groceries={activeGroceryList.slice(0, 30)} />

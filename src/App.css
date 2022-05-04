@@ -16,7 +16,9 @@ h4 {
   height: 40vmin;
   pointer-events: none;
 }
-
+.bg-green {
+  background-color: #25441B;
+}
 .slider{width: 100%; overflow: hidden;}
 
 @media (prefers-reduced-motion: no-preference) {
