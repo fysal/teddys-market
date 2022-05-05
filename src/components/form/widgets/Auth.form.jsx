@@ -33,6 +33,7 @@ const AuthForm = () => {
   };
   const onSubmit = async (e) => {
     e.preventDefault();
+    setFormError("");
     if (formData.email === null || formData.email === "")
       return setFormError("Email is required");
 
@@ -81,7 +82,7 @@ const AuthForm = () => {
           <button
           onClick={()=>setFormError("")}
             type="button"
-            class="btn-close small text-primary"
+            className="btn-close small text-primary"
             data-bs-dismiss="alert"
             aria-label="Close"
           ></button>
