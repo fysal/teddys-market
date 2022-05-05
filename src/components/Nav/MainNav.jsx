@@ -8,7 +8,6 @@ import { Link, NavLink } from "react-router-dom";
 import { auth } from "../../utils/firebaseConfig";
 import { signOut } from "firebase/auth";
 
-
 const MainNav = () => {
   const userContext = useContext(UserContext);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -109,10 +108,10 @@ const MainNav = () => {
 export default MainNav;
 
 export const UserDropdown = ({ context }) => {
-  const logOut = async() => {
-      await signOut(auth);
-      context.setCurrentUser(null);
-  }
+  const logOut = async () => {
+    await signOut(auth);
+    context.setCurrentUser(null);
+  };
   return (
     <div className="d-flex align-items-start flex-column bg-white usr_drop">
       <div className="p-3 w-100">
@@ -128,20 +127,33 @@ export const UserDropdown = ({ context }) => {
       </div>
       <div className="dropdown-divider"></div>
       <div className="text-secondary px-3 py-2">
-        <div className="d-flex align-items-center mb-2">
-          <span className="material-icons-outlined">person</span>
-          <span className={clsx("ms-2", styles.dropdownItems)}>My account</span>
-        </div>
-        <div className="d-flex align-items-center mb-2">
-          <span className="material-icons-outlined">token</span>
-          <span className={clsx("ms-2", styles.dropdownItems)}>My orders</span>
-        </div>
-        <div className="d-flex align-items-center mb-2">
-          <span className="material-icons-outlined">group</span>
-          <span className={clsx("ms-2", styles.dropdownItems)}>
-            Create account
-          </span>
-        </div>
+        {context.currentUser && (
+          <>
+            <div className="d-flex align-items-center mb-2">
+              <span className="material-icons-outlined">person</span>
+              <span className={clsx("ms-2", styles.dropdownItems)}>
+                My account
+              </span>
+            </div>
+            <div className="d-flex align-items-center mb-2">
+              <span className="material-icons-outlined">token</span>
+              <span className={clsx("ms-2", styles.dropdownItems)}>
+                My orders
+              </span>
+            </div>
+          </>
+        )}
+
+        {!context.currentUser && (
+          <>
+            <div className="d-flex align-items-center mb-2">
+              <span className="material-icons-outlined">group</span>
+              <span className={clsx("ms-2", styles.dropdownItems)}>
+                Create account
+              </span>
+            </div>
+          </>
+        )}
         <div className="d-flex align-items-center mb-2">
           <span className="material-icons-outlined">help</span>
           <span className={clsx("ms-2", styles.dropdownItems)}>

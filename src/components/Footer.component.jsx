@@ -24,7 +24,7 @@ const Footer = () => {
     },
     {
       icon: f3,
-      title: "Maney back guarantee",
+      title: "Money back guarantee",
       text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet tellus mauris",
     },
   ];
