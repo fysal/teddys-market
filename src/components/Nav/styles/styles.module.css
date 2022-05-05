@@ -2,10 +2,12 @@
     background-color: #25441B;
     color: #fff;
 }
+
 .logo img {
     border: .5px solid #fff;
     border-radius: 7px;
 }
+
 .container {
     width: 1120px;
     margin: auto;
@@ -27,7 +29,10 @@
     width: 100%;
     border: medium none;
 }
-.input:focus-visible{outline:none;}
+
+.input:focus-visible {
+    outline: none;
+}
 
 .contact {
     background-color: #fff;
@@ -78,3 +83,28 @@
 .catx {
     font-size: 12px;
 }
+
+.user_dropdown {
+    position: absolute;
+    top: 10px;
+    opacity: 0;
+    padding: 1px;
+    background-color: #fff;
+    min-width: 250px;
+    right: 0;
+    box-shadow: 0 0 10px 0 rgb(0 0 0 / 15%);
+    border-radius: 5px;
+    transition: top .3s ease-in-out;
+    visibility: hidden;
+    z-index:1
+}
+
+.user_dropdown.show {
+    top: 40px;
+    opacity: 1;
+    transition: top .3s ease-in-out;
+    height: auto;
+    visibility: visible;
+}
+
+.dropdownItems{ font-size: 12px;}

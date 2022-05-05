@@ -6,7 +6,6 @@ import BestFoodComponent from '../components/BestFood.component';
 import BlogComponent from '../components/Blog.component';
 import NewsLetter from '../components/NewsLetter.component';
 
-
 const Home = () => {
   return (
     <> 

@@ -38,9 +38,31 @@ h4 {
   color: white;
 }
 
+.react-tel-input .form-control {
+  width: 100% !important;
+  border: 1px solid #ced4da !important;
+  border-radius: .25rem !important;
+}
+
 .App-link {
   color: #61dafb;
 }
+.btn-primary {
+  color: #fff;
+  background-color: #8DCA57 !important;
+  border-color: #8DCA57 !important;
+}
+ul.country-list {
+  text-align: left;
+}
+
+.dropdown-divider {
+  width: 100%;
+  height: 1px;
+  background-color: #00000003
+}
+
+.usr_drop .material-icons-outlined{ font-size: 17px}
 
 @keyframes App-logo-spin {
   from {
