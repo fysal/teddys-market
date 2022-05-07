@@ -96,7 +96,7 @@ export const getUserData = async (uid, currentUser, setCurrentUser) => {
       });
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 };
 
@@ -137,14 +137,15 @@ export const addToCart = async (currentUser, quantity = 1, product) => {
 };;
 
 export const getCartItems = (uid, setCartItems) => {
-   let cartItems = []
+   
   try {
     onValue(ref(firebase, `CartTest/${uid}`), snapshot => {
       const data = snapshot.val();
-      Object.values(data).map( item => cartItems.push(item));
+      let cartItems = Object.values(data).map( item => item);
+      console.log(cartItems)
      setCartItems(cartItems);
     });
-    console.log(cartItems);
+    console.log("triggered");
     
   } catch (error) {
     console.log(error)
