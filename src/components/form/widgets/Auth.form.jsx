@@ -2,22 +2,18 @@ import { useState, useContext } from "react";
 import Input from "./Input";
 import SelectFilter from "./SelectFilter";
 import { regex } from "../../../utils/regex.expression";
-import { auth } from "../../../utils/firebaseConfig";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import SpinLoader from "../../SpinLoader";
 import errorHandler from "../../../utils/firebaseErrorHandler";
+import {  loginWithEmailAndPassword, signupUserWithEmailAndPassword } from "../../../utils/userHandler";
 
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+
 import { UserContext } from "../../../utils/UserContext";
 import countries from "../../../utils/countries.json";
 
 const AuthForm = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
-  console.log(currentUser);
   const [isLoggingIn, setIsLoggingIn] = useState(true);
   const [loadingState, setLoadingState] = useState(false);
   const [formData, setFormData] = useState({
@@ -25,6 +21,10 @@ const AuthForm = () => {
     password: null,
     confirmPassword: null,
     phoneNumber: null,
+    adminArea: null,
+    locality: null,
+    countryName: null,
+    address: null,
   });
   const [formError, setFormError] = useState("");
   const onChange = (e) => {
@@ -49,28 +49,37 @@ const AuthForm = () => {
         return setFormError("Password should be 8 characters or more");
       if (formData.password !== formData.confirmPassword)
         return setFormError("Passwords do not match");
+      if (formData.phoneNumber === null || formData.phoneNumber === "")
+        return setFormError("Phone number is required");
+      if (formData.address === null || formData.adress === "")
+        return setFormError("Address can not be empty");
+      if (formData.countryName === null || formData.countryName === "")
+        return setFormError("Nationality field is required");
+      if (formData.adminArea === null || formData.adminArea === "")
+        return setFormError("Region is required");
     }
     setLoadingState(true);
     if (isLoggingIn) {
-      await signInWithEmailAndPassword(auth, formData.email, formData.password)
-        .then((user) => setCurrentUser(user))
-        .catch((error) => {
-          console.log(error.code);
-          let errorMessage = errorHandler(error.code);
-          setFormError(errorMessage);
-        });
+      let response = await loginWithEmailAndPassword(formData,currentUser, setCurrentUser);
+      if(response.status === "success"){
+
+      }else{
+        let errorMessage = errorHandler(response.code);
+        setFormError(errorMessage);
+      }
+    
     } else {
-      await createUserWithEmailAndPassword(
-        auth,
-        formData.email,
-        formData.password
-      )
-        .then((user) => console.log(user))
-        .catch((error) => {
-          console.log(error);
-          let errorMessage = errorHandler(error.code);
-          setFormError(errorMessage);
-        });
+
+      let response = await signupUserWithEmailAndPassword(formData);
+
+      if(response.status === "success"){
+
+      }else{
+        let errorMessage = errorHandler(response.errorCode);
+        setFormError(errorMessage);
+      }
+      
+
     }
     setLoadingState(false);
   };
@@ -80,7 +89,7 @@ const AuthForm = () => {
         <div className="alert alert-danger alert-dismissible fade show">
           {formError}
           <button
-          onClick={()=>setFormError("")}
+            onClick={() => setFormError("")}
             type="button"
             className="btn-close small text-primary"
             data-bs-dismiss="alert"
@@ -106,6 +115,7 @@ const AuthForm = () => {
           placeholder="Enter email"
           id="email"
           name="email"
+          required
           onChange={onChange}
           disabled={loadingState}
         />
@@ -114,6 +124,7 @@ const AuthForm = () => {
           placeholder="Enter password"
           name="password"
           id="password"
+          required
           onChange={onChange}
           disabled={loadingState}
         />
@@ -169,12 +180,21 @@ const AuthForm = () => {
               placeholder="Select region"
               id="adminarea"
               disabled={loadingState}
+              onChange={onChange}
             />
             <SelectFilter
               list={countries.map((c) => c.name)}
+              onChange={onChange}
               name="countryName"
               placeholder="Nationality"
               id="country"
+              disabled={loadingState}
+            />
+            <Input
+              placeholder="Enter location"
+              onChange={onChange}
+              name="locality"
+              id="locality"
               disabled={loadingState}
             />
           </>

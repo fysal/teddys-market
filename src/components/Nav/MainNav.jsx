@@ -1,21 +1,31 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import styles from "./styles/styles.module.css";
 import clsx from "clsx";
 import logo from "../../assets/logo/teddy-logo.png";
-import shopping_cart from "../../assets/icons/shopping-cart.png";
 import { UserContext } from "../../utils/UserContext";
 import { Link, NavLink } from "react-router-dom";
 import { auth } from "../../utils/firebaseConfig";
 import { signOut } from "firebase/auth";
+import { getUserData } from "../../utils/userHandler";
+import Cart from "../Cart";
 
 const MainNav = () => {
-  const userContext = useContext(UserContext);
+  const {currentUser, setCurrentUser} = useContext(UserContext);
   const [showDropdown, setShowDropdown] = useState(false);
+
+  useEffect(() => {
+
+    if ( currentUser ) {
+      getUserData(currentUser.uid,currentUser, setCurrentUser);
+    }
+  }, [currentUser?.displayName]);
+
+console.log(currentUser)
   return (
     <div className={clsx(styles.header)}>
       <div className={clsx(styles.container, "row py-2 align-items-center")}>
         <div className="col-sm-12 col-md-2">
-          <Link exact to="/">
+          <Link to="/">
             <div className={styles.logo}>
               <img src={logo} width="70" />
             </div>
@@ -54,20 +64,7 @@ const MainNav = () => {
         </div>
         <div className="col-sm-12 col-md-3 ">
           <div className="d-flex align-items-center">
-            <div className="float-start d-flex align-items-center flex-2">
-              <span className={clsx(styles.cart_, "position-relative")}>
-                <img src={shopping_cart} width="20" />
-                <span
-                  className={clsx(
-                    styles.count,
-                    "d-flex align-items-center justify-content-center text-white rounded-circle"
-                  )}
-                >
-                  0
-                </span>
-              </span>
-              <span className={clsx(styles.catx, "ms-3")}>My Cart</span>
-            </div>
+           <Cart currentUser={currentUser}/>
             <div
               className="d-flex align-items-center ms-3 pointer position-relative"
               onClick={() => setShowDropdown((preState) => !preState)}
@@ -81,10 +78,12 @@ const MainNav = () => {
                 </span>
               </span>
               <span
-                className="ms-2 small"
+                className="ms-2 small text-capitalize"
                 style={{ fontWeight: "500", opacity: ".7" }}
               >
-                Account
+                {currentUser?.displayName
+                  ? currentUser.displayName.split(" ")[0]
+                  : "Account"}
               </span>
               <span className="material-icons-outlined text-muted">
                 {!showDropdown ? "expand_more" : "expand_less"}
@@ -95,7 +94,7 @@ const MainNav = () => {
                   showDropdown && styles.show
                 )}
               >
-                <UserDropdown context={userContext} />
+                <UserDropdown  />
               </div>
             </div>
           </div>
@@ -107,15 +106,16 @@ const MainNav = () => {
 
 export default MainNav;
 
-export const UserDropdown = ({ context }) => {
+export const UserDropdown = () => {
+  const { currentUser, setCurrentUser } = useContext(UserContext);
   const logOut = async () => {
     await signOut(auth);
-    context.setCurrentUser(null);
+    setCurrentUser(null);
   };
   return (
     <div className="d-flex align-items-start flex-column bg-white usr_drop">
       <div className="p-3 w-100">
-        {context.currentUser === null ? (
+        {currentUser === null ? (
           <NavLink to="/user" className="btn btn-sm btn-primary w-100">
             Sign In
           </NavLink>
@@ -127,7 +127,7 @@ export const UserDropdown = ({ context }) => {
       </div>
       <div className="dropdown-divider"></div>
       <div className="text-secondary px-3 py-2">
-        {context.currentUser && (
+        {currentUser !== null && (
           <>
             <div className="d-flex align-items-center mb-2">
               <span className="material-icons-outlined">person</span>
@@ -144,7 +144,7 @@ export const UserDropdown = ({ context }) => {
           </>
         )}
 
-        {!context.currentUser && (
+        {!currentUser && (
           <>
             <div className="d-flex align-items-center mb-2">
               <span className="material-icons-outlined">group</span>

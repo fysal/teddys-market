@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { firebase } from "../utils/firebaseConfig";
 import { ref, onValue } from "firebase/database";
 import fruitIcon from "../assets/icons/fruits.png";
@@ -12,6 +12,9 @@ import cartIcon from "../assets/icons/shopping-bag.png";
 import Styles from "./styles/product.module.css";
 import clsx from "clsx";
 import SpinLoader from "./SpinLoader";
+import { UserContext } from "../utils/UserContext";
+
+import { addToCart } from "../utils/userHandler";
 
 const Products = () => {
   const tabs = [
@@ -20,7 +23,7 @@ const Products = () => {
     { title: "Meats and fish", icon: meatFishIcon, id: 2 },
     { title: "offers", icon: offersIcon, id: 3 },
     { title: "Ryans garden", icon: ryanIcon, id: 4 },
-    { title:"Cooking essentials", icon: spiceIcon, id: 5 },
+    { title: "Cooking essentials", icon: spiceIcon, id: 5 },
     { title: "staples food", icon: stapleIcon, id: 6 },
   ];
   const [activeTab, setActiveTab] = useState(0);
@@ -112,7 +115,7 @@ const Products = () => {
           ))}
         </div>
         {fetching === true ? (
-         <SpinLoader />
+          <SpinLoader />
         ) : (
           <>
             <ProductCard groceries={activeGroceryList.slice(0, 30)} />
@@ -128,10 +131,16 @@ export default Products;
 
 export const ProductCard = ({ groceries }) => {
   const [values, setValue] = useState({});
-  const addToCart = (e, id) => {
+  const { currentUser } = useContext(UserContext);
+
+  const addItemToCart = async (e, product) => {
     e.preventDefault();
-    const value = values[id];
-    console.log(value);
+    if (currentUser) {
+      await addToCart(currentUser, values[product.itemId], product);
+    } else {
+      //Let the user know
+      console.log("You are not loggedin");
+    }
   };
   const onChange = (e) => {
     setValue({ ...values, [e.target.name]: e.target.value });
@@ -169,7 +178,7 @@ export const ProductCard = ({ groceries }) => {
                 {" "}
                 <form
                   className="mt-2"
-                  onSubmit={(e) => addToCart(e, grocery.itemId)}
+                  onSubmit={(e) => addItemToCart(e, grocery)}
                 >
                   <div className="mb-4 text-center">
                     <input
