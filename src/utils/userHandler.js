@@ -142,12 +142,30 @@ export const getCartItems = (uid, setCartItems) => {
     onValue(ref(firebase, `CartTest/${uid}`), snapshot => {
       const data = snapshot.val();
       let cartItems = Object.values(data).map( item => item);
-      console.log(cartItems)
      setCartItems(cartItems);
     });
-    console.log("triggered");
     
   } catch (error) {
     console.log(error)
   }
 };
+
+export const fetchGroceries = (setGroceries, setFetching) => {
+
+  try {
+    onValue(ref(firebase,"Groceries"), snapshot => {
+       const data = snapshot.val();
+
+       if (data !== null) {
+         Object.values(data).map((grocery) => {
+           setGroceries((groceries) => [...groceries, grocery]);
+           setFetching(false);
+         });
+       }
+    })
+    
+  } catch (error) {
+    
+  }
+
+}

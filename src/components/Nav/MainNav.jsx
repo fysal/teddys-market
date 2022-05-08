@@ -20,7 +20,6 @@ const MainNav = () => {
     }
   }, [currentUser?.displayName]);
 
-console.log(currentUser)
   return (
     <div className={clsx(styles.header)}>
       <div className={clsx(styles.container, "row py-2 align-items-center")}>

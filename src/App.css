@@ -1,11 +1,21 @@
 
 body{ font-family: "Poppins"}
+.body_gray {
+  background: #e5e6ea;
+}
 h1,
 h2,
 h3,
 h4 {
   font-weight: bold;
   color: #25441B;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+a:hover {
+  color: inherit;
 }
 
 .container {
@@ -20,6 +30,8 @@ h4 {
   background-color: #25441B;
 }
 .slider{width: 100%; overflow: hidden;}
+
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {

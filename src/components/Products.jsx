@@ -12,7 +12,9 @@ import cartIcon from "../assets/icons/shopping-bag.png";
 import Styles from "./styles/product.module.css";
 import clsx from "clsx";
 import SpinLoader from "./SpinLoader";
-import { UserContext } from "../utils/UserContext";
+import { UserContext, ProductContext } from "../utils/UserContext";
+import { fetchGroceries } from "../utils/userHandler";
+
 
 import { addToCart } from "../utils/userHandler";
 
@@ -27,22 +29,14 @@ const Products = () => {
     { title: "staples food", icon: stapleIcon, id: 6 },
   ];
   const [activeTab, setActiveTab] = useState(0);
-  const [groceries, setGroceries] = useState([]);
+  const {groceries, setGroceries} = useContext(ProductContext);
   const [activeGroceryList, setActiveGroceryList] = useState([]);
   const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
-    onValue(ref(firebase, "Groceries"), (snapshot) => {
-      const data = snapshot.val();
-
-      if (data !== null) {
-        Object.values(data).map((grocery) => {
-          setGroceries((groceries) => [...groceries, grocery]);
-          setFetching(false);
-        });
-      }
-    });
+    fetchGroceries(setGroceries, setFetching);
   }, []);
+  
   useEffect(() => {
     let activeList = [];
     if (groceries.length > 0) {
