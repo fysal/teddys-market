@@ -9,7 +9,7 @@ import NewsLetter from '../components/NewsLetter.component';
 const Home = () => {
 return (
     <> 
-    {/* <Slider/> */}
+    <Slider/>
     <Products />
     <GiftStrip />
     <BestFoodComponent />
