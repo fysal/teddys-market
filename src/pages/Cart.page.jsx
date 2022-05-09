@@ -5,138 +5,190 @@ import Input from "../components/form/widgets/Input";
 import { Link, useHistory } from "react-router-dom";
 import style from "./styles/styles.module.css";
 import clsx from "clsx";
-
+import SpinLoader from "../components/SpinLoader";
 
 const CartPage = () => {
   const [fetching, setFetching] = useState(false);
   const { cartItems, setCartItems } = useContext(CartContext);
   const { groceries, setGroceries } = useContext(ProductContext);
-  const [delivery, setDelivery] = useState({ name: null, value: null });
+  const [deliveryMethod, setDeliveryMethod] = useState({
+    type: "Standard delivery (5000)",
+    amount:  5000});
+  const [subTotal, setsubTotal] = useState(0);
+  const [finalTotal, setFinalTotal] = useState(0)
 
   const currencyFormatter = Intl.NumberFormat("en-us", {
     currency: "UGX",
     style: "currency",
   });
 
+
   const history = useHistory();
 
   useEffect(() => {
-    if (groceries.length === 0) {
-      fetchGroceries();
-    }
     document.querySelector("body").classList.add("body_gray");
     return () => {
       document.querySelector("body").classList.remove("body_gray");
     };
   }, []);
 
-  const fetchGroceries = async () => {
-    setFetching(true);
-    await fetchGroceries(setGroceries, setFetching);
-    setFetching(false);
-  };
+  useEffect(() => {
+    if (groceries.length === 0) fetchGroceries(setGroceries, setFetching);
+  }, []);
+
+  useEffect(() => {
+    if (cartItems.length > 0) setsubTotal(computeTotal());
+  }, [cartItems]);
+
+  useEffect(()=>{
+    computeFinalTotal();
+  },[cartItems,deliveryMethod])
+
 
   const computeTotal = () => {
-    let grandTotal = 0;
-    cartItems.forEach((item) => (grandTotal += item.itemTotal));
-
-    return grandTotal;
+    let subTotal = 0;
+    cartItems.forEach((item) => (subTotal += item.itemTotal));
+    return subTotal;
   };
 
-  const goToCheckout = () => {
-    history.push('/checkout',cartItems)
+
+  const computeFinalTotal = () => {
+    const total =  computeTotal() + deliveryMethod.amount;
+    setFinalTotal(total);
   }
+
+const onDeliveryMethodChange = (e) => {
+  if(e.target.value === "Standard delivery (5000)")
+   setDeliveryMethod({type: "Standard delivery (5000)", amount : 5000});
+   else setDeliveryMethod({type : "Express delivery", amount :10000 })
+}
+
+  const goToCheckout = () => {
+    history.push("/checkout", {
+      cartItems,
+      subTotal,
+      deliveryMethod,
+      finalTotal
+    });
+  };
 
   return (
     <div className="container">
       <div className={clsx(style.cart_wrapper)}>
         <div className="row">
           <div className="col-sm-12 col-md-8 px-5 pt-3 pb-4">
-            <div
-              className={clsx(
-                style.headers,
-                "d-flex align-items-start justify-content-between mt-4 mb-3"
-              )}
-            >
-              <h6>Shopping Cart</h6>{" "}
-              <span className="small">{cartItems.length} Items</span>
-            </div>
-            {cartItems.length > 0 ? (
-              <>
-                <table className="table cart_table">
-                  <thead>
-                    <tr>
-                      {[
-                        "Product details",
-                        "Quantity",
-                        "Price",
-                        "Sub Total",
-                      ].map((item, index) => (
-                        <th
-                          scope="col"
-                          key={index}
-                          className="small text-muted"
-                        >
-                          {item}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {cartItems.map((item) => (
-                      <tr key={item.cartId}>
-                        <td className="d-flex align-items-start">
-                          <img
-                            width="50"
-                            className="me-2"
-                            src={
-                              groceries.filter(
-                                (grocery) => grocery.itemId === item.itemId
-                              )[0]?.imageUrl
-                            }
-                          />
-                          <div className="d-flex flex-column">
-                            {" "}
-                            <div className="small">
-                              {
-                                groceries.filter(
-                                  (grocery) => grocery.itemId === item.itemId
-                                )[0]?.itemName
-                              }
-                            </div>
-                            <div className="small text-muted ">
-                              {
-                                groceries.filter(
-                                  (grocery) => grocery.itemId === item.itemId
-                                )[0]?.availability
-                              }
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          {" "}
-                          <div className="small text-muted">
-                            <span className="labls">X</span> {item.itemCount}
-                          </div>
-                        </td>
-                        <td>
-                          {" "}
-                          <div className="small text-muted">
-                            {currencyFormatter.format(item.itemPrice)}
-                          </div>
-                        </td>
-                        <td>
-                          <div className="small text-muted">
-                            {currencyFormatter.format(item.itemTotal)}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </>
+            {groceries.length === 0 || !cartItems ? (
+              <div className="d-flex align-items-center justify-content-center">
+                <SpinLoader text="Loading. Please wait" />
+              </div>
             ) : (
-              "Cart is empty"
+              <>
+                <div
+                  className={clsx(
+                    style.headers,
+                    "d-flex align-items-start justify-content-between mt-4 mb-3"
+                  )}
+                >
+                  <h6>Shopping Cart</h6>{" "}
+                  <span className="small">{cartItems.length} Items</span>
+                </div>
+                {cartItems.length > 0 ? (
+                  <>
+                    <table className="table cart_table ">
+                      <thead>
+                        <tr>
+                          {[
+                            "Product details",
+                            "Quantity",
+                            "Price",
+                            "Sub Total",
+                          ].map((item, index) => (
+                            <th
+                              scope="col"
+                              key={index}
+                              className="small text-muted"
+                            >
+                              {item}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {cartItems.map((item) => (
+                          <tr key={item.cartId}>
+                            <td className="d-flex align-items-start">
+                              <img
+                                width="50"
+                                className="me-2"
+                                src={
+                                  groceries.filter(
+                                    (grocery) => grocery.itemId === item.itemId
+                                  )[0]?.imageUrl
+                                }
+                              />
+                              <div className="d-flex flex-column">
+                                {" "}
+                                <div className="small">
+                                  {
+                                    groceries.filter(
+                                      (grocery) =>
+                                        grocery.itemId === item.itemId
+                                    )[0]?.itemName
+                                  }
+                                </div>
+                                <div className="small text-muted ">
+                                  {
+                                    groceries.filter(
+                                      (grocery) =>
+                                        grocery.itemId === item.itemId
+                                    )[0]?.availability
+                                  }
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              {" "}
+                              <div className="small text-muted d-flex align-items-center justify-content-between">
+                                <span
+                                  className={clsx(
+                                    "material-icons-outlined pointer",
+                                    style.btn_cart
+                                  )}
+                                >
+                                  remove
+                                </span>
+
+                                <span>{item.itemCount}</span>
+                                <span
+                                  className={clsx(
+                                    "material-icons-outlined pointer",
+                                    style.btn_cart
+                                  )}
+                                >
+                                  add
+                                </span>
+                              </div>
+                            </td>
+                            <td>
+                              {" "}
+                              <div className="small text-muted">
+                                {currencyFormatter.format(item.itemPrice)}
+                              </div>
+                            </td>
+                            <td>
+                              <div className="small text-muted">
+                                {currencyFormatter.format(item.itemTotal)}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </>
+                ) : (
+                  "Cart is empty"
+                )}
+              </>
             )}
           </div>
           <div className={clsx("col-sm-12 col-md-4 ", style.cart_sum)}>
@@ -154,9 +206,7 @@ const CartPage = () => {
                 <span>Items {cartItems?.length}</span>
                 <span>
                   <span>Total </span>
-                  <span>
-                    {cartItems && currencyFormatter.format(computeTotal())}
-                  </span>
+                  <span>{cartItems && currencyFormatter.format(subTotal)}</span>
                 </span>
               </div>
               <h6 className="mb-2 small">Delivery</h6>
@@ -164,16 +214,15 @@ const CartPage = () => {
                 name="delivery"
                 style={{ fontSize: "12px" }}
                 className="form-select"
-                onChange={(e) => console.log(e.target)}
+                onChange={onDeliveryMethodChange}
               >
-                {[
-                  { name: "Standard delivery (5000)", value: 5000 },
-                  { name: "Express delivery (10000)", value: 1000 },
-                ].map((item, index) => (
-                  <option key={index} value={item.value}>
-                    {item.name}
-                  </option>
-                ))}
+                {["Standard delivery (5000)", "Express delivery (10000)"].map(
+                  (item, index) => (
+                    <option key={index} value={item}>
+                      {item}
+                    </option>
+                  )
+                )}
               </select>
               <div className="mt-3">
                 <label className="text-uppercase small mb-2">Promo code</label>
@@ -184,11 +233,21 @@ const CartPage = () => {
                   <span className="small text-uppercase"> Apply</span>
                 </button>
               </div>
+
               <div className="text-uppercase mt-4 border-top pt-3">
+                <div
+                  className="d-flex align-items-center justify-content-between mb-3 text-muted"
+                  style={{ fontSize: "13px" }}
+                >
+                  <span className="text-capitalize">Delivery charge</span>
+                  <span className="">
+                    {currencyFormatter.format(deliveryMethod.amount)}
+                  </span>
+                </div>
                 <div className="d-flex align-items-center justify-content-between mb-3 fw-bold small">
                   <span className="text-uppercase small">total cost</span>
                   <span>
-                    {cartItems && currencyFormatter.format(computeTotal())}
+                    {cartItems && currencyFormatter.format(finalTotal)}
                   </span>
                 </div>
                 <div className="d-grid gap-2">
@@ -203,7 +262,7 @@ const CartPage = () => {
                 </div>
               </div>
               <Link to="/" className={style.back_link}>
-                <div className="d-flex align-items-center mt-3">
+                <div className="d-flex align-items-center mt-3 mb-4">
                   <span
                     className="material-icons-outlined me-2"
                     style={{ fontSize: "15px" }}

@@ -40,5 +40,9 @@ table.cart_table tbody tr::after {
 
 .back_link:hover{
     color:#8DCA57;
-
+}
+.btn_cart {
+    font-size: 13px;
+    background: #F5F5F5;
+    padding: 5px;
 }

@@ -5,6 +5,7 @@ import AuthForm from "../components/form/widgets/Auth.form";
 import AnnonymousRoutes from "../components/protectedRoutes/AnnonymousRoutes";
 import CartPage from "./Cart.page";
 import Checkout from "./Checkout.page";
+import ProtectedRoutes from "../components/protectedRoutes/ProtectedRoutes";
 
 
 const MainRoutes = () => {
@@ -12,8 +13,8 @@ const MainRoutes = () => {
     <MainLayout>
       <Route exact path="/" component={Home} />
       <AnnonymousRoutes path="/user" component={AuthForm} />
-      <Route path="/cart" component={CartPage}/>
-      <Route path="/checkout" component={Checkout} />
+      <ProtectedRoutes path="/cart" component={CartPage} />
+      <ProtectedRoutes path="/checkout" component={Checkout} />
     </MainLayout>
   );
 };
