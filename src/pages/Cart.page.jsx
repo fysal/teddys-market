@@ -37,17 +37,17 @@ const CartPage = () => {
   }, []);
 
   useEffect(() => {
-    if (cartItems.length > 0) setsubTotal(computeTotal());
-  }, [cartItems]);
+    if (cartItems?.items?.length > 0) setsubTotal(computeTotal());
+  }, [cartItems.items]);
 
   useEffect(()=>{
     computeFinalTotal();
-  },[cartItems,deliveryMethod])
+  },[cartItems?.items,deliveryMethod])
 
 
   const computeTotal = () => {
     let subTotal = 0;
-    cartItems.forEach((item) => (subTotal += item.itemTotal));
+    cartItems?.items?.forEach((item) => (subTotal += item.itemTotal));
     return subTotal;
   };
 
@@ -65,19 +65,19 @@ const onDeliveryMethodChange = (e) => {
 
   const goToCheckout = () => {
     history.push("/checkout", {
-      cartItems,
+      cartItems: cartItems.items,
+      originalCart : cartItems.original,
       subTotal,
       deliveryMethod,
       finalTotal
     });
   };
-
   return (
     <div className="container">
       <div className={clsx(style.cart_wrapper)}>
         <div className="row">
           <div className="col-sm-12 col-md-8 px-5 pt-3 pb-4">
-            {groceries.length === 0 || !cartItems ? (
+            {groceries.length === 0 || !cartItems.items ? (
               <div className="d-flex align-items-center justify-content-center">
                 <SpinLoader text="Loading. Please wait" />
               </div>
@@ -90,9 +90,9 @@ const onDeliveryMethodChange = (e) => {
                   )}
                 >
                   <h6>Shopping Cart</h6>{" "}
-                  <span className="small">{cartItems.length} Items</span>
+                  <span className="small">{cartItems.items.length} Items</span>
                 </div>
-                {cartItems.length > 0 ? (
+                {cartItems.items.length > 0 ? (
                   <>
                     <table className="table cart_table ">
                       <thead>
@@ -114,7 +114,7 @@ const onDeliveryMethodChange = (e) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {cartItems.map((item) => (
+                        {cartItems.items.map((item) => (
                           <tr key={item.cartId}>
                             <td className="d-flex align-items-start">
                               <img
@@ -186,7 +186,14 @@ const onDeliveryMethodChange = (e) => {
                     </table>
                   </>
                 ) : (
-                  "Cart is empty"
+                  <div className="d-flex align-items-center justify-content-between flex-column">
+                    <lord-icon
+                      src="https://cdn.lordicon.com/slkvcfos.json"
+                      trigger="loop"
+                      style={{width:"250px",height:"250px"}}
+                    ></lord-icon>
+                    <div className="small text-muted">Your cart is empty</div>
+                  </div>
                 )}
               </>
             )}
@@ -203,10 +210,12 @@ const onDeliveryMethodChange = (e) => {
               </div>
 
               <div className="d-flex align-items-center justify-content-between small mb-4">
-                <span>Items {cartItems?.length}</span>
+                <span>Items {cartItems.items?.length}</span>
                 <span>
                   <span>Total </span>
-                  <span>{cartItems && currencyFormatter.format(subTotal)}</span>
+                  <span>
+                    {cartItems.items && currencyFormatter.format(subTotal)}
+                  </span>
                 </span>
               </div>
               <h6 className="mb-2 small">Delivery</h6>
@@ -247,7 +256,7 @@ const onDeliveryMethodChange = (e) => {
                 <div className="d-flex align-items-center justify-content-between mb-3 fw-bold small">
                   <span className="text-uppercase small">total cost</span>
                   <span>
-                    {cartItems && currencyFormatter.format(finalTotal)}
+                    {cartItems.items && currencyFormatter.format(finalTotal)}
                   </span>
                 </div>
                 <div className="d-grid gap-2">

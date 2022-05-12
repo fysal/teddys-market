@@ -7,7 +7,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./utils/firebaseConfig";
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState({original:null,items:[]});
   const [groceries, setGroceries] = useState([]);
 
   useEffect(() => {
@@ -26,6 +26,7 @@ function App() {
                   <Route path="/" component={MainRoutes} />
                   <Route path="/cart" component={MainRoutes} />
                   <Route path="/checkout" component={MainRoutes} />
+                  <Route path="/transaction-complete" component={MainRoutes} />
                 </Switch>
               </ProductContext.Provider>
               <Route path="/user" component={MainRoutes} />

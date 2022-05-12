@@ -23,7 +23,7 @@ const Cart = ({ currentUser }) => {
             "d-flex align-items-center justify-content-center text-white rounded-circle"
           )}
         >
-          {cartItems?.length}
+          {cartItems.items?.length ?? 0}
         </span>
       </span>
       <span className={clsx(styles.catx, "ms-3")}>My Cart</span>

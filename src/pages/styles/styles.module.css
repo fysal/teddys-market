@@ -46,3 +46,28 @@ table.cart_table tbody tr::after {
     background: #F5F5F5;
     padding: 5px;
 }
+
+.p_card{
+    border:1px solid #00000030;
+    border-radius:2px;
+}
+.p_card_active{
+    background-color: #8DCA57;
+    color: #fff;
+    border-color: #25441b2f;
+}
+
+.phone_number_wrapper {
+    background-color: #f5f5f596;
+    color: #8DCA57; 
+}
+.billing_address{
+    background-color: #F5F5F5;
+}
+
+.billing_address > div{margin-bottom:5px; font-size:12px}
+
+.card_Wrapper label{ font-size:14px; font-weight:400; }
+.card_Wrapper input, .card_Wrapper select{ font-size: 14px}
+
+/* .cardLogos{width:100%; height: 80px; background-size: 100%;} */

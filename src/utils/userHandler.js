@@ -3,7 +3,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { ref, set, onValue} from "firebase/database";
+import { ref, set, onValue, push, remove } from "firebase/database";
 import { uid } from "uid";
 
 export const loginWithEmailAndPassword = async (
@@ -85,7 +85,7 @@ export const getUserData = async (uid, currentUser, setCurrentUser) => {
       setCurrentUser({
         email: currentUser.email,
         displayName: userName,
-        uid : currentUser.uid,
+        uid: currentUser.uid,
         address,
         adminArea,
         locality,
@@ -134,38 +134,69 @@ export const addToCart = async (currentUser, quantity = 1, product) => {
     response = { status: "failed", code: error.code };
     return response;
   }
-};;
+};
 
 export const getCartItems = (uid, setCartItems) => {
-   
   try {
-    onValue(ref(firebase, `CartTest/${uid}`), snapshot => {
-      const data = snapshot.val();
-      let cartItems = Object.values(data).map( item => item);
-     setCartItems(cartItems);
+    onValue(ref(firebase, `CartTest/${uid}`), (snapshot) => {
+      console.log(snapshot.val())
+      if(snapshot.val() !== null){
+        const data = snapshot.val();
+      let cartItems = Object.values(data).map((item) => item);
+      setCartItems({ original: data, items: cartItems });
+      }else{
+        setCartItems({ original: null, items: [] });
+      }
+      
     });
-    
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
-export const fetchGroceries = (setGroceries, setFetching) => {
+export const deleteCart = async (uid) => {
+  console.log(uid)
+  let response = null;
+  try{
+     await remove(ref(firebase,`CartTest/${uid}` ));
+     response = {status:"successful"}
+     return response;
+  }catch(error){
 
-  try {
-    onValue(ref(firebase,"Groceries"), snapshot => {
-       const data = snapshot.val();
+    response = { status:"failed", code : error.code}
+    return response;
 
-       if (data !== null) {
-         Object.values(data).map((grocery) => {
-           setGroceries((groceries) => [...groceries, grocery]);
-           setFetching(false);
-         });
-       }
-    })
-    
-  } catch (error) {
-    
   }
 
+ 
+
 }
+
+export const fetchGroceries = (setGroceries, setFetching) => {
+  try {
+    onValue(ref(firebase, "Groceries"), (snapshot) => {
+      const data = snapshot.val();
+
+      if (data !== null) {
+        Object.values(data).map((grocery) => {
+          setGroceries((groceries) => [...groceries, grocery]);
+          setFetching(false);
+        });
+      }
+    });
+  } catch (error) {}
+};
+
+export const storeOrder = async (orderId, payload) => {
+  let response = "";
+  try {
+    await set(ref(firebase, `Orders/${orderId}`), payload);
+    response = { status: "successfull" };
+
+    return response;
+  } catch (error) {
+    response = { status: "failed", code: error.code };
+
+    return response;
+  }
+};
