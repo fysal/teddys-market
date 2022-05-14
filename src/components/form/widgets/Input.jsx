@@ -1,7 +1,9 @@
+import clsx from "clsx";
 import React from "react";
 
-const Input = ({ type = "text", placeholder, label, id, onChange, name, required=false, disabled }) => {
+const Input = ({ type = "text", placeholder, label, id, onChange, name, size,required=false, disabled, value = "" }) => {
   return (
+    <div className={clsx("col-sm-12",size)}>
     <div className="form-group mb-3">
       {label && <label className="form-label" htmlFor={id}>{label}</label>}
       <input
@@ -13,8 +15,9 @@ const Input = ({ type = "text", placeholder, label, id, onChange, name, required
         onChange={onChange}
         required={required}
         disabled={disabled}
+        value={value}
       />
-    </div>
+    </div></div>
   );
 };
 

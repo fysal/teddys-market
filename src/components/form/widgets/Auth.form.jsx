@@ -7,7 +7,7 @@ import "react-phone-input-2/lib/style.css";
 import SpinLoader from "../../SpinLoader";
 import errorHandler from "../../../utils/firebaseErrorHandler";
 import {  loginWithEmailAndPassword, signupUserWithEmailAndPassword } from "../../../utils/userHandler";
-
+import regionsList from "../../../utils/regionsList.json"
 
 import { UserContext } from "../../../utils/UserContext";
 import countries from "../../../utils/countries.json";
@@ -170,12 +170,7 @@ const AuthForm = () => {
               disabled={loadingState}
             />
             <SelectFilter
-              list={[
-                "Central Region",
-                "Western Region",
-                "Eastern Region",
-                "Norther Region",
-              ]}
+              list={regionsList}
               name="adminArea"
               placeholder="Select region"
               id="adminarea"

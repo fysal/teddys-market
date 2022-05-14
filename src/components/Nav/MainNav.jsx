@@ -10,13 +10,12 @@ import { getUserData } from "../../utils/userHandler";
 import Cart from "../Cart";
 
 const MainNav = () => {
-  const {currentUser, setCurrentUser} = useContext(UserContext);
+  const { currentUser, setCurrentUser } = useContext(UserContext);
   const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
-
-    if ( currentUser ) {
-      getUserData(currentUser.uid,currentUser, setCurrentUser);
+    if (currentUser) {
+      getUserData(currentUser.uid, currentUser, setCurrentUser);
     }
   }, [currentUser?.displayName]);
 
@@ -63,7 +62,7 @@ const MainNav = () => {
         </div>
         <div className="col-sm-12 col-md-3 ">
           <div className="d-flex align-items-center">
-           <Cart currentUser={currentUser}/>
+            <Cart currentUser={currentUser} />
             <div
               className="d-flex align-items-center ms-3 pointer position-relative"
               onClick={() => setShowDropdown((preState) => !preState)}
@@ -93,7 +92,7 @@ const MainNav = () => {
                   showDropdown && styles.show
                 )}
               >
-                <UserDropdown  />
+                <UserDropdown />
               </div>
             </div>
           </div>
@@ -128,18 +127,22 @@ export const UserDropdown = () => {
       <div className="text-secondary px-3 py-2">
         {currentUser !== null && (
           <>
-            <div className="d-flex align-items-center mb-2">
-              <span className="material-icons-outlined">person</span>
-              <span className={clsx("ms-2", styles.dropdownItems)}>
-                My account
-              </span>
-            </div>
-            <div className="d-flex align-items-center mb-2">
-              <span className="material-icons-outlined">token</span>
-              <span className={clsx("ms-2", styles.dropdownItems)}>
-                My orders
-              </span>
-            </div>
+            <NavLink to="/customer/account">
+              <div className="d-flex align-items-center mb-2">
+                <span className="material-icons-outlined">person</span>
+                <span className={clsx("ms-2", styles.dropdownItems)}>
+                  My account
+                </span>
+              </div>
+            </NavLink>
+            <Link to="/customer/orders">
+              <div className="d-flex align-items-center mb-2">
+                <span className="material-icons-outlined">token</span>
+                <span className={clsx("ms-2", styles.dropdownItems)}>
+                  My orders
+                </span>
+              </div>
+            </Link>
           </>
         )}
 

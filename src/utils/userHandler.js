@@ -1,9 +1,14 @@
-import { auth, firebase } from "./firebaseConfig";
+import { auth, firebase, storage } from "./firebaseConfig";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { ref, set, onValue, push, remove } from "firebase/database";
+import { ref, set, onValue, push, remove, update } from "firebase/database";
+import {
+  ref as storageRef,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 import { uid } from "uid";
 
 export const loginWithEmailAndPassword = async (
@@ -18,7 +23,6 @@ export const loginWithEmailAndPassword = async (
       formData.email,
       formData.password
     ).then((user) => {
-      console.log(user);
       setCurrentUser(user);
       getUserData(user.user.uid, currentUser, setCurrentUser);
     });
@@ -139,15 +143,13 @@ export const addToCart = async (currentUser, quantity = 1, product) => {
 export const getCartItems = (uid, setCartItems) => {
   try {
     onValue(ref(firebase, `CartTest/${uid}`), (snapshot) => {
-      console.log(snapshot.val())
-      if(snapshot.val() !== null){
+      if (snapshot.exists()) {
         const data = snapshot.val();
-      let cartItems = Object.values(data).map((item) => item);
-      setCartItems({ original: data, items: cartItems });
-      }else{
+        let cartItems = Object.values(data).map((item) => item);
+        setCartItems({ original: data, items: cartItems });
+      } else {
         setCartItems({ original: null, items: [] });
       }
-      
     });
   } catch (error) {
     console.log(error);
@@ -155,22 +157,16 @@ export const getCartItems = (uid, setCartItems) => {
 };
 
 export const deleteCart = async (uid) => {
-  console.log(uid)
   let response = null;
-  try{
-     await remove(ref(firebase,`CartTest/${uid}` ));
-     response = {status:"successful"}
-     return response;
-  }catch(error){
-
-    response = { status:"failed", code : error.code}
+  try {
+    await remove(ref(firebase, `CartTest/${uid}`));
+    response = { status: "successful" };
     return response;
-
+  } catch (error) {
+    response = { status: "failed", code: error.code };
+    return response;
   }
-
- 
-
-}
+};
 
 export const fetchGroceries = (setGroceries, setFetching) => {
   try {
@@ -197,6 +193,76 @@ export const storeOrder = async (orderId, payload) => {
   } catch (error) {
     response = { status: "failed", code: error.code };
 
+    return response;
+  }
+};
+
+export const fetchUserOrders = async (uid) => {
+  try {
+    onValue(ref(firebase, "Orders/"));
+  } catch (error) {}
+};
+export const updateUserPicture = async (uid, image, setUploading) => {
+  let response = null;
+  try {
+    setUploading((prevState) => ({ ...prevState, status: true }));
+    const uploadTask = uploadBytesResumable(
+      storageRef(storage, "images/" + uid),
+      image
+    );
+    let progress = 0;
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        progress =
+          Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setUploading((prevState) => ({ ...prevState, progress }));
+      },
+      (error) => {
+        response = { status: "failed", code: error.code };
+        setUploading((prevState) => ({ ...prevState, status: false }));
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+          update(ref(firebase, "Users/" + uid), { imageUrl: downloadUrl });
+          setUploading((prevState) => ({ ...prevState, status: false }));
+          response = { status: "successful" };
+        });
+      }
+    );
+
+    return response;
+  } catch (error) {
+    response = { status: "failed", code: error.code };
+    return response;
+  }
+};
+
+export const updateUserData = async (uid, payload) => {
+  let response = null;
+  const {
+    displayName: userName,
+    phoneNumber,
+    adminArea,
+    locality,
+    countryName,
+    address,
+  } = payload;
+  try {
+    await update(ref(firebase, "/Users/" + uid), {
+      userName,
+      phoneNumber,
+      adminArea,
+      locality,
+      countryName,
+      address,
+    });
+
+    response = { status: "successful" };
+    return response;
+  } catch (error) {
+    response = { status: "failed", code: error.code };
     return response;
   }
 };

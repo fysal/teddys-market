@@ -31,7 +31,11 @@ a:hover {
   background-color: #25441B;
 }
 .slider{width: 100%; overflow: hidden;}
+.hide-input{display: none;}
 
+.bg-success {
+  background-color: #8DCA57 !important
+}
 
 .overlay {
   background-color: #25441b55;

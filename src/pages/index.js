@@ -7,6 +7,8 @@ import CartPage from "./Cart.page";
 import Checkout from "./Checkout.page";
 import ProtectedRoutes from "../components/protectedRoutes/ProtectedRoutes";
 import TransactionComplete from "./TransactionCompleted.page";
+import MyAccount from "./MyAccount.page";
+import Orders from "./Orders.page";
 
 
 const MainRoutes = () => {
@@ -17,6 +19,8 @@ const MainRoutes = () => {
       <ProtectedRoutes path="/cart" component={CartPage} />
       <ProtectedRoutes path="/checkout" component={Checkout} />
       <Route path="/transaction-complete" component={TransactionComplete} />
+      <Route path="/customer/account" component={MyAccount} />
+      <Route path="/customer/orders" component={Orders} />
     </MainLayout>
   );
 };
