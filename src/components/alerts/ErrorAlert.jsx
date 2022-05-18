@@ -11,7 +11,7 @@ const ErrorAlert = ({ errorMessage, setError }) => {
 
   return (
     <div
-      className="alert alert-warning alert-dismissible fade show"
+      className="alert alert-danger alert-dismissible fade show"
       role="alert"
     >
       {errorMessage}

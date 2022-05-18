@@ -29,7 +29,17 @@ a:hover {
 }
 .bg-green {
   background-color: #25441B;
+  color: #fff;
 }
+.bg_lime{
+  background : #8DCA57;
+  color: #fff;
+}
+.bg_lime_dark{
+  background : #82A284;
+  color: #fff;
+}
+
 .slider{width: 100%; overflow: hidden;}
 .hide-input{display: none;}
 
@@ -98,4 +108,50 @@ ul.country-list {
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.track_action .material-icons-outlined {
+  border-radius: 50%;
+  color: #fff;
+  font-weight: bold;
+  padding: 2px;
+  font-size: 18px;
+}
+.ac_header {
+  /* font-size: 13px; */
+  font-weight: bold;
+}
+
+.ac_status {
+  border-radius: 2px;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 10px;
+  padding: 2px 7px;
+  font-weight: 500;
+}
+.ac_date {
+  font-size: 12px;
+}
+
+.line_track {
+  position: absolute;
+  width: 4px;
+  height: 96%;
+  left: 9.5px;
+  top: 24px;
+}
+
+.side_menu {
+  padding: 10px 15px;
+}
+.active .side_menu {
+  background-color: #ededef;
+}
+.active .item-0{
+  border-radius:.25rem .25rem 0 0
+}
+.side_menu:hover{
+  background-color: #dedee1ed
 }

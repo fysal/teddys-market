@@ -9,6 +9,8 @@ import CreditCardWidget from "../components/checkout_widgets/CreditCardWidget";
 import { collectFunds, checkTransaction } from "../utils/paymentHandler";
 import { storeOrder, deleteCart } from "../utils/userHandler";
 import { MobileMoneyWidget } from "../components/checkout_widgets/MobileMoneyWidget";
+import randomString from '../utils/randomString';
+
 
 const Checkout = ({ location }) => {
   const { subTotal, finalTotal, deliveryMethod, cartItems, originalCart } =
@@ -52,15 +54,12 @@ const Checkout = ({ location }) => {
 
   const makePayment = async (e) => {
     e.preventDefault();
-
-    // await deleteCart(currentUser.userId);
-    // return;
-
+  
     const data = {
       msisdn: phoneNumber,
       amount: finalTotal,
       external_reference,
-      narration: "grocery payment",
+      narration: "Grocery payment",
     };
     setLoading(true);
     const response = await collectFunds(JSON.stringify(data));
@@ -74,9 +73,9 @@ const Checkout = ({ location }) => {
         transStatus = transResponse.data.transactionStatus.toLowerCase();
       }
       if (transStatus === "succeeded") {
-        const hour = new Date().getHours();
-        const amPm = hour >= 12 ? "pm" : "am";
-        const date =
+        const hour = new Date().getHours() % 12;
+        const amPm = hour >= 12 ? "am" : "pm";
+        const date = new Date().getDate() + "/" + new Date().getMonth() + "/"+
           new Date().getFullYear() +
           " " +
           hour +
@@ -84,9 +83,7 @@ const Checkout = ({ location }) => {
           new Date().getMinutes() +
           " " +
           amPm;
-        const orderId = (Math.random() + 5)
-          .toString(36)
-          .replace(/[^a-z]+/g, [1 - 9]);
+        const orderId = randomString();
         const payload = {
           Actions: [
             {
@@ -103,13 +100,13 @@ const Checkout = ({ location }) => {
           date,
           deliveryFee: deliveryMethod.amount,
           imageUrl: "default",
-          orderId,
-          order_code: orderId,
+          orderId ,
+          order_code: randomString().substring(0,9),
           payment_method: paymentOption,
           phoneNumber,
           status: "complete",
-          subTotal: subTotal + "Ush",
-          totalFee: finalTotal + "Ush",
+          subTotal: subTotal + " Ush",
+          totalFee: finalTotal + " Ush",
           transactionReference: transResponse.data.transactionReference,
           transactionStatus: transResponse.data.transactionStatus,
           userId: currentUser.userId,
@@ -299,6 +296,7 @@ export const LoadingWidget = () => {
         <lord-icon
           src="https://cdn.lordicon.com/nkmsrxys.json"
           trigger="loop"
+          colors="primary:#121331,secondary:#8dca57"
           style={{ width: "250px", height: "250px" }}
         ></lord-icon>
         <h3 className="mb-3">Processing</h3>

@@ -11,6 +11,7 @@ import MessageAlert from "../components/alerts/MessageAlert";
 import ErrorAlert from "../components/alerts/ErrorAlert";
 import SpinLoader from "../components/SpinLoader";
 import ReactLoading from "react-loading";
+import UserSidePanel from "../components/Nav/UserSidePanel";
 
 const MyAccount = () => {
   const { currentUser } = useContext(UserContext);
@@ -19,7 +20,13 @@ const MyAccount = () => {
   const [message, setMessage] = useState(null);
   const [uploading, setUploading] = useState({ status: false, progress: 0 });
   const [error, setError] = useState(null);
-  // console.log(JSON.stringify(currentUser));
+
+    useEffect(() => {
+      document.querySelector("body").classList.add("body_gray");
+      return () => {
+        document.querySelector("body").classList.remove("body_gray");
+      };
+    }, []);
   useEffect(() => {
     setUserData(currentUser);
   }, [currentUser]);
@@ -60,7 +67,7 @@ const MyAccount = () => {
   };
 
   return (
-    <div className="container py-4">
+    <div className="container">
       {uploading.status && (
         <div className="progress w-75 m-auto">
           <div
@@ -87,135 +94,143 @@ const MyAccount = () => {
         </div>
       )}
 
-      {userData ? (
-        <div className="border rounded w-75 m-auto mt-4">
-          <h6 className="border-bottom px-4 py-2 mb-3">Edit my account</h6>
-          <div className="px-4">
-            <div className="d-flex align-items-center">
-              <img
-                className="rounded-circle me-3"
-                width="80"
-                height="80"
-                src={
-                  userData?.imageUrl === "default"
-                    ? "https://bit.ly/38qcnCL"
-                    : userData?.imageUrl
-                }
-              />
-              <label className="btn btn-secondary btn-sm me-2" htmlFor="avatar">
-                <span className="small">Upload</span>
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                className="hide-input"
-                id="avatar"
-                disabled={uploading.status}
-                onChange={(e) => onUploadChange(e)}
-              />
-              <label className="btn btn-outline-secondary btn-sm me-5">
-                <span className="small">Remove</span>
-              </label>
-              {uploading.status ||
-                (loading && (
-                  <ReactLoading
-                    type="bars"
-                    width={30}
-                    height={30}
-                    color="#25441B82"
+      <div className="row">
+        <div className="col-sm-12 col-md-3"><UserSidePanel/></div>
+        <div className="col-sm-12 col-md-9">
+          {userData ? (
+            <div className="border rounded bg-white mt-5">
+              <h6 className="border-bottom px-4 p-3 mb-3">Edit my account</h6>
+              <div className="px-4">
+                <div className="d-flex align-items-center">
+                  <img
+                    className="rounded-circle me-3"
+                    width="80"
+                    height="80"
+                    src={
+                      userData?.imageUrl === "default"
+                        ? "https://bit.ly/38qcnCL"
+                        : userData?.imageUrl
+                    }
                   />
-                ))}
+                  <label
+                    className="btn btn-secondary btn-sm me-2"
+                    htmlFor="avatar"
+                  >
+                    <span className="small">Upload</span>
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hide-input"
+                    id="avatar"
+                    disabled={uploading.status}
+                    onChange={(e) => onUploadChange(e)}
+                  />
+                  <label className="btn btn-outline-secondary btn-sm me-5">
+                    <span className="small">Remove</span>
+                  </label>
+                  {uploading.status ||
+                    (loading && (
+                      <ReactLoading
+                        type="bars"
+                        width={30}
+                        height={30}
+                        color="#25441B82"
+                      />
+                    ))}
+                </div>
+                <div className="border-top mt-3 pt-3 row">
+                  <Input
+                    label="Display name"
+                    name="displayName"
+                    id="displayName"
+                    placeholder="Enter full name"
+                    onChange={onChange}
+                    value={userData?.displayName || ""}
+                    size="col-md-6"
+                    required
+                    disabled={loading}
+                  />
+                  <div className="col-sm-12 col-md-6">
+                    <label className="form-label">Phone</label>
+                    <PhoneInput
+                      country={"ug"}
+                      onlyCountries={["ug"]}
+                      value={userData?.phoneNumber}
+                      disabled={loading}
+                      onChange={(phone) => {
+                        setUserData({ ...userData, phoneNumber: phone });
+                      }}
+                    />
+                  </div>{" "}
+                  <SelectFilter
+                    name="countryName"
+                    id="country"
+                    label="Country Name"
+                    value={userData?.countryName}
+                    list={countries.map((country) => country.name)}
+                    placeholder={userData?.countryName}
+                    size="col-md-6"
+                    onChange={onChange}
+                    required
+                    disabled={loading}
+                  />
+                  <SelectFilter
+                    name="adminArea"
+                    id="adminArea"
+                    label="Region"
+                    list={regionsList}
+                    size="col-md-6"
+                    value={userData?.adminArea}
+                    onChange={onChange}
+                    required
+                    disabled={loading}
+                  />
+                  <Input
+                    id="address"
+                    name="address"
+                    onChange={onChange}
+                    required
+                    value={userData?.address || ""}
+                    placeholder="Ex. Ntinda, Stratcher road"
+                    size="col-md-6"
+                    label="Address"
+                    disabled={loading}
+                  />
+                  <Input
+                    id="locality"
+                    name="locality"
+                    onChange={onChange}
+                    required
+                    value={userData?.locality || ""}
+                    placeholder="Enter your locality"
+                    size="col-md-6"
+                    label="Locality"
+                    disabled={loading}
+                  />
+                </div>
+                <div className="d-flex align-items-center justify-content-end mb-4">
+                  <button
+                    className="btn btn-outline-secondary btn-sm"
+                    disabled={loading}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="btn btn-primary btn-sm ms-3"
+                    disabled={loading}
+                    onClick={(e) => onSubmit(e)}
+                  >
+                    Save changes
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="border-top mt-3 pt-3 row">
-              <Input
-                label="Display name"
-                name="displayName"
-                id="displayName"
-                placeholder="Enter full name"
-                onChange={onChange}
-                value={userData?.displayName || ""}
-                size="col-md-6"
-                required
-                disabled={loading}
-              />
-              <div className="col-sm-12 col-md-6">
-                <label className="form-label">Phone</label>
-                <PhoneInput
-                  country={"ug"}
-                  onlyCountries={["ug"]}
-                  value={userData?.phoneNumber}
-                  disabled={loading}
-                  onChange={(phone) => {
-                    setUserData({ ...userData, phoneNumber: phone });
-                  }}
-                />
-              </div>{" "}
-              <SelectFilter
-                name="countryName"
-                id="country"
-                label="Country Name"
-                value={userData?.countryName}
-                list={countries.map((country) => country.name)}
-                placeholder={userData?.countryName}
-                size="col-md-6"
-                onChange={onChange}
-                required
-                disabled={loading}
-              />
-              <SelectFilter
-                name="adminArea"
-                id="adminArea"
-                label="Region"
-                list={regionsList}
-                size="col-md-6"
-                value={userData?.adminArea}
-                onChange={onChange}
-                required
-                disabled={loading}
-              />
-              <Input
-                id="address"
-                name="address"
-                onChange={onChange}
-                required
-                value={userData?.address || ""}
-                placeholder="Ex. Ntinda, Stratcher road"
-                size="col-md-6"
-                label="Address"
-                disabled={loading}
-              />
-              <Input
-                id="locality"
-                name="locality"
-                onChange={onChange}
-                required
-                value={userData?.locality || ""}
-                placeholder="Enter your locality"
-                size="col-md-6"
-                label="Locality"
-                disabled={loading}
-              />
-            </div>
-            <div className="d-flex align-items-center justify-content-end mb-4">
-              <button
-                className="btn btn-outline-secondary btn-sm"
-                disabled={loading}
-              >
-                Cancel
-              </button>
-              <button
-                className="btn btn-primary btn-sm ms-3"
-                disabled={loading}
-                onClick={(e) => onSubmit(e)}
-              >
-                Save changes
-              </button>
-            </div>
-          </div>
+          ) : (
+            <SpinLoader />
+          )}
         </div>
-      ) : (
-        <SpinLoader />
-      )}
+      </div>
     </div>
   );
 };

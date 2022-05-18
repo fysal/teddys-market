@@ -35,7 +35,7 @@ const TransactionComplete = ({location}) => {
         >
           Continue shopping
         </Link>
-        <Link to="/" className="btn btn-primary btn-md rounded-0">
+        <Link to="/customer/orders" className="btn btn-primary btn-md rounded-0">
           <span className="text-capitalize">Track your order</span>
         </Link>
       </div>

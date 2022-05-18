@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import styles from "./styles/styles.module.css";
 import clsx from "clsx";
 import logo from "../../assets/logo/teddy-logo.png";
-import { UserContext } from "../../utils/UserContext";
+import { CartContext, OrdersListContext, UserContext } from "../../utils/UserContext";
 import { Link, NavLink } from "react-router-dom";
 import { auth } from "../../utils/firebaseConfig";
 import { signOut } from "firebase/auth";
@@ -106,9 +106,13 @@ export default MainNav;
 
 export const UserDropdown = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
+  const { setCartItems } = useContext(CartContext);
+  const {setOrdersList } = useContext(OrdersListContext);
   const logOut = async () => {
     await signOut(auth);
     setCurrentUser(null);
+    setCartItems({original:null, items: null});
+    setOrdersList(null)
   };
   return (
     <div className="d-flex align-items-start flex-column bg-white usr_drop">
@@ -157,7 +161,7 @@ export const UserDropdown = () => {
           </>
         )}
         <div className="d-flex align-items-center mb-2">
-          <span className="material-icons-outlined">help</span>
+          <span className="material-icons-outlined">contact_support</span>
           <span className={clsx("ms-2", styles.dropdownItems)}>
             Help center
           </span>

@@ -1,9 +1,20 @@
-import { auth, firebase, storage } from "./firebaseConfig";
+import { auth, database, storage } from "./firebaseConfig";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { ref, set, onValue, push, remove, update } from "firebase/database";
+import {
+  ref,
+  set,
+  onValue,
+  remove,
+  update,
+  orderByChild,
+  orderByValue,
+  equalTo,
+  query,
+  increment,
+} from "firebase/database";
 import {
   ref as storageRef,
   uploadBytesResumable,
@@ -69,12 +80,12 @@ export const storeUserData = async (user, formData) => {
 
   delete formData.password;
   delete formData.confirmPassword;
-  set(ref(firebase, "Users/" + user.uid), formData);
+  set(ref(database, "Users/" + user.uid), formData);
 };
 
 export const getUserData = async (uid, currentUser, setCurrentUser) => {
   try {
-    onValue(ref(firebase, "Users/" + uid), (snapshot) => {
+    onValue(ref(database, "Users/" + uid), (snapshot) => {
       const {
         userName,
         address,
@@ -129,7 +140,7 @@ export const addToCart = async (currentUser, quantity = 1, product) => {
         ampm,
     };
     await set(
-      ref(firebase, `CartTest/${currentUser.userId}/${product.itemId}`),
+      ref(database, `CartTest/${currentUser.userId}/${product.itemId}`),
       { ...cartItem }
     );
     response = { status: "success" };
@@ -142,7 +153,7 @@ export const addToCart = async (currentUser, quantity = 1, product) => {
 
 export const getCartItems = (uid, setCartItems) => {
   try {
-    onValue(ref(firebase, `CartTest/${uid}`), (snapshot) => {
+    onValue(ref(database, `CartTest/${uid}`), (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
         let cartItems = Object.values(data).map((item) => item);
@@ -159,7 +170,7 @@ export const getCartItems = (uid, setCartItems) => {
 export const deleteCart = async (uid) => {
   let response = null;
   try {
-    await remove(ref(firebase, `CartTest/${uid}`));
+    await remove(ref(database, `CartTest/${uid}`));
     response = { status: "successful" };
     return response;
   } catch (error) {
@@ -170,7 +181,7 @@ export const deleteCart = async (uid) => {
 
 export const fetchGroceries = (setGroceries, setFetching) => {
   try {
-    onValue(ref(firebase, "Groceries"), (snapshot) => {
+    onValue(ref(database, "Groceries"), (snapshot) => {
       const data = snapshot.val();
 
       if (data !== null) {
@@ -186,9 +197,8 @@ export const fetchGroceries = (setGroceries, setFetching) => {
 export const storeOrder = async (orderId, payload) => {
   let response = "";
   try {
-    await set(ref(firebase, `Orders/${orderId}`), payload);
+    await set(ref(database, `Orders/${orderId}`), payload);
     response = { status: "successfull" };
-
     return response;
   } catch (error) {
     response = { status: "failed", code: error.code };
@@ -197,10 +207,27 @@ export const storeOrder = async (orderId, payload) => {
   }
 };
 
-export const fetchUserOrders = async (uid) => {
+export const fetchUserOrders = async (userId, setOrdersList) => {
   try {
-    onValue(ref(firebase, "Orders/"));
-  } catch (error) {}
+    const newOrderList = [];
+
+    const dbRef = query(
+      ref(database, "Orders"),
+      orderByChild("userId"),
+      equalTo(userId)
+    );
+    onValue(dbRef, (snapshot) => {
+      if (snapshot.exists()) {
+        Object.values(snapshot.val()).forEach((snap) => {
+          newOrderList.push(snap);
+        });
+        newOrderList.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setOrdersList([...newOrderList]);
+      } else setOrdersList([]);
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 export const updateUserPicture = async (uid, image, setUploading) => {
   let response = null;
@@ -225,7 +252,7 @@ export const updateUserPicture = async (uid, image, setUploading) => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
-          update(ref(firebase, "Users/" + uid), { imageUrl: downloadUrl });
+          update(ref(database, "Users/" + uid), { imageUrl: downloadUrl });
           setUploading((prevState) => ({ ...prevState, status: false }));
           response = { status: "successful" };
         });
@@ -250,7 +277,7 @@ export const updateUserData = async (uid, payload) => {
     address,
   } = payload;
   try {
-    await update(ref(firebase, "/Users/" + uid), {
+    await update(ref(database, "/Users/" + uid), {
       userName,
       phoneNumber,
       adminArea,
@@ -264,5 +291,36 @@ export const updateUserData = async (uid, payload) => {
   } catch (error) {
     response = { status: "failed", code: error.code };
     return response;
+  }
+};
+
+export const removeItemFromCart = async (cartId, itemId) => {
+  let response = "";
+  try {
+    await remove(ref(database, `CartTest/${cartId}/${itemId}`));
+    response = { status: "successful", message: "Item removed from cart" };
+
+    return response;
+  } catch (error) {
+    response = { status: "failed", code: error.code };
+  }
+};
+
+export const incrementItem = async (cartId, itemId) => {
+  try {
+    update(ref(database, `CartTest/${cartId}/${itemId}`), {
+      itemCount: increment(1),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const decrementItem = async (cartId, itemId) => {
+  try {
+    update(ref(database, `CartTest/${cartId}/${itemId}`), {
+      itemCount: increment(-1),
+    });
+  } catch (error) {
+    console.log(error);
   }
 };

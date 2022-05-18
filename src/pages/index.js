@@ -9,6 +9,8 @@ import ProtectedRoutes from "../components/protectedRoutes/ProtectedRoutes";
 import TransactionComplete from "./TransactionCompleted.page";
 import MyAccount from "./MyAccount.page";
 import Orders from "./Orders.page";
+import OrderDetails from "./OrderDetails.page";
+import TrackOrder from "./TrackOrder.page";
 
 
 const MainRoutes = () => {
@@ -18,9 +20,11 @@ const MainRoutes = () => {
       <AnnonymousRoutes path="/user" component={AuthForm} />
       <ProtectedRoutes path="/cart" component={CartPage} />
       <ProtectedRoutes path="/checkout" component={Checkout} />
-      <Route path="/transaction-complete" component={TransactionComplete} />
-      <Route path="/customer/account" component={MyAccount} />
-      <Route path="/customer/orders" component={Orders} />
+      <ProtectedRoutes path="/transaction-complete" component={TransactionComplete} />
+      <ProtectedRoutes path="/customer/account" component={MyAccount} />
+      <ProtectedRoutes path="/customer/orders" component={Orders} />
+      <ProtectedRoutes path="/customer/order/details" component={OrderDetails} />
+      <ProtectedRoutes path="/customer/order/track" component={TrackOrder} />
     </MainLayout>
   );
 };

@@ -19,7 +19,7 @@ const Footer = () => {
     },
     {
       icon: f2,
-      title: "Delivery at your dsoorstep",
+      title: "Delivery at your doorstep",
       text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet tellus mauris",
     },
     {
