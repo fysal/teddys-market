@@ -4,7 +4,6 @@ const key = process.env.REACT_APP_ZENGA_PAY_API_KEY_DEMO;
 export const collectFunds = async (data) => {
   try {
     const url = endpoint + "collections";
-    console.log(data);
     const response = await fetch(url, {
       method: "POST",
       headers: {

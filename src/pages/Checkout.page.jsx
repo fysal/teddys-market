@@ -7,12 +7,18 @@ import "react-phone-input-2/lib/style.css";
 import { parsePhoneNumber } from "awesome-phonenumber";
 import CreditCardWidget from "../components/checkout_widgets/CreditCardWidget";
 import { collectFunds, checkTransaction } from "../utils/paymentHandler";
-import { storeOrder, deleteCart } from "../utils/userHandler";
+import {
+  storeOrder,
+  deleteCart,
+  updateUserLocation,
+} from "../utils/userHandler";
 import { MobileMoneyWidget } from "../components/checkout_widgets/MobileMoneyWidget";
 import randomString from '../utils/randomString';
+ 
 
 
 const Checkout = ({ location }) => {
+  const apiKey = process.env.REACT_APP_GOOGLEL_API_KEY;
   const { subTotal, finalTotal, deliveryMethod, cartItems, originalCart } =
     location.state;
   const { currentUser } = useContext(UserContext);
@@ -35,6 +41,7 @@ const Checkout = ({ location }) => {
     currency: "UGX",
   });
   const history = useHistory();
+
   const external_reference = Math.random()
     .toString(36)
     .replace(/[^a-z]+/g, "");
@@ -50,11 +57,16 @@ const Checkout = ({ location }) => {
       document.querySelector("body").classList.remove("body_gray");
     };
   }, []);
+
   const phone = parsePhoneNumber(phoneNumber.toString(), "UG");
+
+
 
   const makePayment = async (e) => {
     e.preventDefault();
-  
+    if(!currentUser.latLng){
+      return setError("Enable location in your browser");
+    }
     const data = {
       msisdn: phoneNumber,
       amount: finalTotal,
@@ -152,6 +164,26 @@ const Checkout = ({ location }) => {
     return response;
   };
 
+  const getLocation = async () => {
+    const geoLoc = navigator.geolocation.getCurrentPosition(showPosition);
+    console.log(geoLoc)
+  }
+  async function showPosition(position) {
+  //Adding to the location 
+   console.log(position.coords.latitude)
+   console.log(position.coords.longitude);
+   const latLng = `${position.coords.latitude} , ${position.coords.longitude}`;
+   await updateUserLocation(currentUser?.userId, latLng);
+  }
+
+  useEffect(() => {
+    if (currentUser && !currentUser.latLng)
+      if (navigator.geolocation) {
+        getLocation();
+      }
+
+  },[navigator.geolocation])
+    
   return (
     <>
       {loading && <LoadingWidget />}
@@ -195,6 +227,7 @@ const Checkout = ({ location }) => {
               <div className="mt-4">
                 {paymentOption === "mobile money" ? (
                   <MobileMoneyWidget
+                    defaultPhoneNumber={currentUser?.phoneNumber}
                     phoneNumber={phoneNumber}
                     setPhoneNumber={setPhoneNumber}
                     useDefaultNumber={useDefaultNumber}
@@ -206,10 +239,7 @@ const Checkout = ({ location }) => {
                   />
                 )}
               </div>
-              <div className="mt-4">
-                {" "}
-                <h6>Location</h6>widget goes here
-              </div>
+           
               <div className={clsx("mt-5 small text-capitalize")}>
                 <h6 className="border-bottom pb-3 text-capitalize">
                   Billing address
@@ -264,6 +294,7 @@ const Checkout = ({ location }) => {
                 <button
                   className="btn btn-primary btn-sm text-uppercase"
                   onClick={makePayment}
+                  disabled={!currentUser.latLng ? true : false}
                 >
                   Place order
                 </button>
@@ -306,3 +337,5 @@ export const LoadingWidget = () => {
     </div>
   );
 };
+
+

@@ -155,3 +155,8 @@ ul.country-list {
 .side_menu:hover{
   background-color: #dedee1ed
 }
+
+.form-check-input:checked {
+  background-color: #8DCA57;
+  border-color: #8DCA57;
+}

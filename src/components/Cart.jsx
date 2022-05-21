@@ -12,7 +12,9 @@ const Cart = ({ currentUser }) => {
     if (currentUser) getCartItems(currentUser?.uid, setCartItems);
     else setCartItems([])
   }, [currentUser]);
+
   return (
+    <>
       <NavLink to="/cart">
           <div className="float-start d-flex align-items-center flex-2">
       <span className={clsx(styles.cart_, "position-relative")}>
@@ -28,7 +30,11 @@ const Cart = ({ currentUser }) => {
       </span>
       <span className={clsx(styles.catx, "ms-3")}>My Cart</span>
     </div></NavLink>
-    
+
+      {/* <div id="toastme" className="pointer">
+        Clisck me
+      </div> */}
+    </>
   );
 };
 

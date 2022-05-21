@@ -14,7 +14,7 @@ import clsx from "clsx";
 import SpinLoader from "./SpinLoader";
 import { UserContext, ProductContext } from "../utils/UserContext";
 import { fetchGroceries } from "../utils/userHandler";
-
+import { toast } from 'react-toastify';
 
 import { addToCart } from "../utils/userHandler";
 
@@ -130,7 +130,7 @@ export const ProductCard = ({ groceries }) => {
   const addItemToCart = async (e, product) => {
     e.preventDefault();
     if (currentUser) {
-      await addToCart(currentUser, values[product.itemId], product);
+      await addToCart(currentUser, values[product.itemId], product, toast);
     } else {
       //Let the user know
       console.log("You are not loggedin");

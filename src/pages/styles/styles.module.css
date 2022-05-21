@@ -59,7 +59,7 @@ table.cart_table tbody tr::after {
 
 .phone_number_wrapper {
     background-color: #f5f5f596;
-    color: #8DCA57; 
+    /* color: #8DCA57;  */
 }
 .billing_address{
     background-color: #F5F5F5;

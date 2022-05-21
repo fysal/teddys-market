@@ -10,10 +10,10 @@ import {
   remove,
   update,
   orderByChild,
-  orderByValue,
   equalTo,
   query,
   increment,
+  runTransaction,
 } from "firebase/database";
 import {
   ref as storageRef,
@@ -95,6 +95,7 @@ export const getUserData = async (uid, currentUser, setCurrentUser) => {
         countryName,
         phoneNumber,
         userId,
+        latLng = null,
       } = snapshot.val();
 
       setCurrentUser({
@@ -108,6 +109,7 @@ export const getUserData = async (uid, currentUser, setCurrentUser) => {
         countryName,
         phoneNumber,
         userId,
+        latLng,
       });
     });
   } catch (error) {
@@ -115,7 +117,7 @@ export const getUserData = async (uid, currentUser, setCurrentUser) => {
   }
 };
 
-export const addToCart = async (currentUser, quantity = 1, product) => {
+export const addToCart = async (currentUser, quantity = 1, product, toast) => {
   let response = "";
   let itemTotal = parseInt(product.itemPrice) * quantity;
   let hours = new Date().getHours() % 12;
@@ -139,10 +141,19 @@ export const addToCart = async (currentUser, quantity = 1, product) => {
         " " +
         ampm,
     };
-    await set(
+     set(
       ref(database, `CartTest/${currentUser.userId}/${product.itemId}`),
       { ...cartItem }
     );
+    toast.success("Item added to cart", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
     response = { status: "success" };
     return response;
   } catch (error) {
@@ -308,8 +319,17 @@ export const removeItemFromCart = async (cartId, itemId) => {
 
 export const incrementItem = async (cartId, itemId) => {
   try {
-    update(ref(database, `CartTest/${cartId}/${itemId}`), {
-      itemCount: increment(1),
+    const dbRef = ref(database, `CartTest/${cartId}/${itemId}`);
+
+    runTransaction(dbRef, (transaction) => {
+      if (!transaction) return;
+
+      let total = transaction.itemPrice * (transaction.itemCount + 1);
+
+      update(dbRef, {
+        itemCount: transaction.itemCount + 1,
+        itemTotal: total,
+      });
     });
   } catch (error) {
     console.log(error);
@@ -317,9 +337,22 @@ export const incrementItem = async (cartId, itemId) => {
 };
 export const decrementItem = async (cartId, itemId) => {
   try {
-    update(ref(database, `CartTest/${cartId}/${itemId}`), {
-      itemCount: increment(-1),
+    const dbRef = ref(database, `CartTest/${cartId}/${itemId}`);
+    runTransaction(dbRef, (transaction) => {
+      if (!transaction) return;
+      if (transaction.itemCount === 1) return;
+
+      let total = transaction.itemPrice * (transaction.itemCount - 1);
+      update(dbRef, { itemCount: transaction.itemCount - 1, itemTotal: total });
     });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateUserLocation = async (userId, coordinates) => {
+  try {
+    await update(ref(database, "Users/" + userId), { latLng: coordinates });
   } catch (error) {
     console.log(error);
   }
