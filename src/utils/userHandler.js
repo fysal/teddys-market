@@ -12,7 +12,6 @@ import {
   orderByChild,
   equalTo,
   query,
-  increment,
   runTransaction,
 } from "firebase/database";
 import {
@@ -111,7 +110,7 @@ export const getUserData = async (uid, currentUser, setCurrentUser) => {
         userId,
         latLng,
       });
-    });
+    }, {onlyOnce :  true});
   } catch (error) {
     // console.log(error);
   }
@@ -145,7 +144,7 @@ export const addToCart = async (currentUser, quantity = 1, product, toast) => {
       ref(database, `CartTest/${currentUser.userId}/${product.itemId}`),
       { ...cartItem }
     );
-    toast.success("Item added to cart", {
+    toast.success(`${product.itemName} added to cart`, {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -153,6 +152,7 @@ export const addToCart = async (currentUser, quantity = 1, product, toast) => {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
+      theme:"colored"
     });
     response = { status: "success" };
     return response;
@@ -201,8 +201,10 @@ export const fetchGroceries = (setGroceries, setFetching) => {
           setFetching(false);
         });
       }
-    });
-  } catch (error) {}
+    }, {onlyOnce :  true});
+  } catch (error) {
+    console.log( error)
+  }
 };
 
 export const storeOrder = async (orderId, payload) => {

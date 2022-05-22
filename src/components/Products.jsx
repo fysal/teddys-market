@@ -1,6 +1,4 @@
 import React, { useEffect, useState, useContext } from "react";
-import { firebase } from "../utils/firebaseConfig";
-import { ref, onValue } from "firebase/database";
 import fruitIcon from "../assets/icons/fruits.png";
 import vegeIcon from "../assets/icons/vegetables.png";
 import offersIcon from "../assets/icons/offers.png";
@@ -12,9 +10,9 @@ import cartIcon from "../assets/icons/shopping-bag.png";
 import Styles from "./styles/product.module.css";
 import clsx from "clsx";
 import SpinLoader from "./SpinLoader";
-import { UserContext, ProductContext } from "../utils/UserContext";
+import { UserContext, ProductContext, CartContext } from "../utils/UserContext";
 import { fetchGroceries } from "../utils/userHandler";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 import { addToCart } from "../utils/userHandler";
 
@@ -29,14 +27,17 @@ const Products = () => {
     { title: "staples food", icon: stapleIcon, id: 6 },
   ];
   const [activeTab, setActiveTab] = useState(0);
-  const {groceries, setGroceries} = useContext(ProductContext);
+  const { groceries, setGroceries } = useContext(ProductContext);
   const [activeGroceryList, setActiveGroceryList] = useState([]);
-  const [fetching, setFetching] = useState(true);
-
+  const [fetching, setFetching] = useState(false);
   useEffect(() => {
-    fetchGroceries(setGroceries, setFetching);
+   if(groceries.length < 1){
+     setFetching(true)
+     fetchGroceries(setGroceries, setFetching);
+   }
+    
   }, []);
-  
+
   useEffect(() => {
     let activeList = [];
     if (groceries.length > 0) {
@@ -126,6 +127,7 @@ export default Products;
 export const ProductCard = ({ groceries }) => {
   const [values, setValue] = useState({});
   const { currentUser } = useContext(UserContext);
+  const { cartItems } = useContext(CartContext);
 
   const addItemToCart = async (e, product) => {
     e.preventDefault();
@@ -133,7 +135,16 @@ export const ProductCard = ({ groceries }) => {
       await addToCart(currentUser, values[product.itemId], product, toast);
     } else {
       //Let the user know
-      console.log("You are not loggedin");
+      toast.error("You have to be loggedin to add product to cart", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme:"colored"
+      });
     }
   };
   const onChange = (e) => {
@@ -152,6 +163,11 @@ export const ProductCard = ({ groceries }) => {
       }
     }
   };
+  const itemInCart = (id) => {
+    if (!cartItems.items) return false;
+    const itemExists = cartItems.items.find((item) => item.itemId === id);
+    return itemExists;
+  };
   return (
     <div className="row mt-4">
       {groceries.map((grocery) => (
@@ -166,10 +182,9 @@ export const ProductCard = ({ groceries }) => {
 
             <div className="small fw-bold">UGX {grocery.itemPrice}</div>
             <div className="small text-capitalize">Per {grocery.unit}</div>
-            <div className="small text-capitalize">{grocery.category}</div>
+            {/* <div className="small text-capitalize">{grocery.category}</div> */}
             {grocery.availability === "In Stock" ? (
               <>
-                {" "}
                 <form
                   className="mt-2"
                   onSubmit={(e) => addItemToCart(e, grocery)}
@@ -205,6 +220,7 @@ export const ProductCard = ({ groceries }) => {
 
                   <button
                     type="submit"
+                    disabled={itemInCart(grocery.itemId)}
                     className={clsx(
                       Styles.btn_add_to_cart,
                       "btn btn-sm rounded-pill px-3 "
@@ -213,7 +229,9 @@ export const ProductCard = ({ groceries }) => {
                     <div className="d-flex align-items-center justify-content-center">
                       <img src={cartIcon} width="13" />
                       <span className={clsx(Styles.btn_text_small, "ms-1")}>
-                        Add to cart
+                        {itemInCart(grocery.itemId)
+                          ? "Added to cart"
+                          : "Add to cart"}
                       </span>
                     </div>
                   </button>
