@@ -160,3 +160,11 @@ ul.country-list {
   background-color: #8DCA57;
   border-color: #8DCA57;
 }
+
+.slider-control-centerright  button {
+  display: flex;
+  opacity: .2 !important;
+}
+.slider-control-centerright button:hover {
+opacity : 1 !important
+}
