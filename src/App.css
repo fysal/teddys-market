@@ -161,10 +161,12 @@ ul.country-list {
   border-color: #8DCA57;
 }
 
-.slider-control-centerright  button {
+.slider-control-centerright button,
+.slider-control-centerleft button {
   display: flex;
   opacity: .2 !important;
 }
-.slider-control-centerright button:hover {
+.slider-control-centerright button:hover,
+.slider-control-centerleft button:hover {
 opacity : 1 !important
 }
