@@ -24,6 +24,7 @@ const Search = ({ location }) => {
   useEffect(() => {
     document.querySelector("body").classList.add("body_gray");
     document.querySelector(".main-menu").style = "position:sticky;top:0";
+    
     return () => {
       document.querySelector("body").classList.remove("body_gray");
       document.querySelector(".main-menu").style = "position:relative;";
@@ -38,6 +39,7 @@ const Search = ({ location }) => {
   }, [groceries]);
 
   useEffect(() => {
+      window.scrollTo(0, 0);
     if (location.search !== "") {
       const searchText = location.search.split("=")[1];
       const searchResult = groceries.filter((grocery) =>

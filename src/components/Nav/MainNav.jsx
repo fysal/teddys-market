@@ -2,7 +2,11 @@ import React, { useContext, useState, useEffect } from "react";
 import styles from "./styles/styles.module.css";
 import clsx from "clsx";
 import logo from "../../assets/logo/teddy-logo.png";
-import { CartContext, OrdersListContext, UserContext } from "../../utils/UserContext";
+import {
+  CartContext,
+  OrdersListContext,
+  UserContext,
+} from "../../utils/UserContext";
 import { Link, NavLink, useHistory } from "react-router-dom";
 import { auth } from "../../utils/firebaseConfig";
 import { signOut } from "firebase/auth";
@@ -13,7 +17,7 @@ import { push } from "firebase/database";
 const MainNav = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [searchText, setSearchText] =  useState("");
+  const [searchText, setSearchText] = useState("");
   const history = useHistory();
 
   useEffect(() => {
@@ -22,14 +26,16 @@ const MainNav = () => {
     }
   }, [currentUser?.displayName]);
 
-
   const onSearch = () => {
-    console.log(history)
-     history.push({pathname : "/products", search: `?query=${searchText.trim()}`})
-     
-  }
+    if (searchText !== "") {
+      history.push({
+        pathname: "/products",
+        search: `?query=${searchText.trim()}`,
+      });
+      setSearchText("");
+    }
+  };
   const onChange = (e) => setSearchText(e.target.value);
-  
 
   return (
     <div className={clsx(styles.header)}>
@@ -52,9 +58,10 @@ const MainNav = () => {
               placeholder="Search..."
               className={clsx(styles.input, "ms-2")}
               onChange={onChange}
+              value={searchText}
             />
             <span
-            onClick={()=>onSearch()}
+              onClick={() => onSearch()}
               className={clsx(
                 styles.btnSearch,
                 "material-icons-outlined ms-2 pointer"
@@ -124,12 +131,12 @@ export default MainNav;
 export const UserDropdown = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
   const { setCartItems } = useContext(CartContext);
-  const {setOrdersList } = useContext(OrdersListContext);
+  const { setOrdersList } = useContext(OrdersListContext);
   const logOut = async () => {
     await signOut(auth);
     setCurrentUser(null);
-    setCartItems({original:null, items: null});
-    setOrdersList(null)
+    setCartItems({ original: null, items: null });
+    setOrdersList(null);
   };
   return (
     <div className="d-flex align-items-start flex-column bg-white usr_drop">
