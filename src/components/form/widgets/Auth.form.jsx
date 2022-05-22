@@ -12,9 +12,14 @@ import regionsList from "../../../utils/regionsList.json"
 import { UserContext } from "../../../utils/UserContext";
 import countries from "../../../utils/countries.json";
 
-const AuthForm = () => {
+const AuthForm = ({location}) => {
+  console.log(location)
+  const isLogginState  = location.state;
   const { currentUser, setCurrentUser } = useContext(UserContext);
-  const [isLoggingIn, setIsLoggingIn] = useState(true);
+  const [isLoggingIn, setIsLoggingIn] = useState(
+    isLogginState === null ? true : isLogginState
+  );
+  console.log(isLoggingIn)
   const [loadingState, setLoadingState] = useState(false);
   const [formData, setFormData] = useState({
     email: null,

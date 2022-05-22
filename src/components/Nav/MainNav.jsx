@@ -3,21 +3,33 @@ import styles from "./styles/styles.module.css";
 import clsx from "clsx";
 import logo from "../../assets/logo/teddy-logo.png";
 import { CartContext, OrdersListContext, UserContext } from "../../utils/UserContext";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useHistory } from "react-router-dom";
 import { auth } from "../../utils/firebaseConfig";
 import { signOut } from "firebase/auth";
 import { getUserData } from "../../utils/userHandler";
 import Cart from "../Cart";
+import { push } from "firebase/database";
 
 const MainNav = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [searchText, setSearchText] =  useState("");
+  const history = useHistory();
 
   useEffect(() => {
     if (currentUser) {
       getUserData(currentUser.uid, currentUser, setCurrentUser);
     }
   }, [currentUser?.displayName]);
+
+
+  const onSearch = () => {
+    console.log(history)
+     history.push({pathname : "/products", search: `?query=${searchText.trim()}`})
+     
+  }
+  const onChange = (e) => setSearchText(e.target.value);
+  
 
   return (
     <div className={clsx(styles.header)}>
@@ -39,9 +51,14 @@ const MainNav = () => {
             <input
               placeholder="Search..."
               className={clsx(styles.input, "ms-2")}
+              onChange={onChange}
             />
             <span
-              className={clsx(styles.btnSearch, "material-icons-outlined ms-2")}
+            onClick={()=>onSearch()}
+              className={clsx(
+                styles.btnSearch,
+                "material-icons-outlined ms-2 pointer"
+              )}
             >
               search
             </span>
@@ -128,7 +145,7 @@ export const UserDropdown = () => {
         )}
       </div>
       <div className="dropdown-divider"></div>
-      <div className="text-secondary px-3 py-2">
+      <div className="text-secondary px-3 py-2 usr_">
         {currentUser !== null && (
           <>
             <NavLink to="/customer/account">
@@ -152,26 +169,32 @@ export const UserDropdown = () => {
 
         {!currentUser && (
           <>
-            <div className="d-flex align-items-center mb-2">
-              <span className="material-icons-outlined">group</span>
-              <span className={clsx("ms-2", styles.dropdownItems)}>
-                Create account
-              </span>
-            </div>
+            <NavLink to={{ pathname: "/user", state: false }}>
+              <div className="d-flex align-items-center mb-2">
+                <span className="material-icons-outlined">group</span>
+                <span className={clsx("ms-2", styles.dropdownItems)}>
+                  Create account
+                </span>
+              </div>
+            </NavLink>
           </>
         )}
-        <div className="d-flex align-items-center mb-2">
-          <span className="material-icons-outlined">contact_support</span>
-          <span className={clsx("ms-2", styles.dropdownItems)}>
-            Help center
-          </span>
-        </div>
-        <div className="d-flex align-items-center mb-2">
-          <span className="material-icons-outlined">block</span>
-          <span className={clsx("ms-2", styles.dropdownItems)}>
-            Order cancellation
-          </span>
-        </div>
+        <NavLink to="/help-center">
+          <div className="d-flex align-items-center mb-2">
+            <span className="material-icons-outlined">contact_support</span>
+            <span className={clsx("ms-2", styles.dropdownItems)}>
+              Help center
+            </span>
+          </div>
+        </NavLink>
+        <NavLink to="/order-cancellation">
+          <div className="d-flex align-items-center mb-2">
+            <span className="material-icons-outlined">block</span>
+            <span className={clsx("ms-2", styles.dropdownItems)}>
+              Order cancellation
+            </span>
+          </div>
+        </NavLink>
       </div>
     </div>
   );

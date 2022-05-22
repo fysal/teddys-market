@@ -100,6 +100,10 @@ ul.country-list {
 }
 
 .usr_drop .material-icons-outlined{ font-size: 17px}
+.usr_ a.active,
+.usr_ a:hover {
+  color: #8DCA57 !important;
+}
 
 @keyframes App-logo-spin {
   from {
