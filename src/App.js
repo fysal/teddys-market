@@ -11,6 +11,8 @@ import {
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./utils/firebaseConfig";
 import { ToastContainer } from "react-toastify";
+  import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [cartItems, setCartItems] = useState({ original: null, items: [] });
