@@ -35,7 +35,7 @@ const ProductCard = ({ groceries }) => {
   const increment = (id) => {
     if (values.hasOwnProperty(id))
       setValue({ ...values, [id]: parseInt(values[id]) + 1 });
-    else setValue({ ...values, [id]: +1 });
+    else setValue({ ...values, [id]: +2 });
   };
 
   const decrement = (id) => {
