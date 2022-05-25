@@ -14,6 +14,7 @@ import { fetchGroceries } from "../utils/userHandler";
 
 import ProductCard from "./ProductCard";
 import { Link } from "react-router-dom";
+import NoResults from "./NoResults.component";
 
 const Products = () => {
   const tabs = [
@@ -112,7 +113,11 @@ const Products = () => {
           <SpinLoader />
         ) : (
           <>
-            <ProductCard groceries={activeGroceryList.slice(0, 30)} />
+            {activeGroceryList.length === 0 ? (
+              <NoResults />
+            ) : (
+              <ProductCard groceries={activeGroceryList.slice(0, 30)} />
+            )}
             <div className="text-center">
               <Link
                 to="/products"

@@ -294,7 +294,7 @@ const Checkout = ({ location }) => {
                 <button
                   className="btn btn-primary btn-sm text-uppercase"
                   onClick={makePayment}
-                  disabled={!currentUser.latLng ? true : false}
+                 
                 >
                   Place order
                 </button>
