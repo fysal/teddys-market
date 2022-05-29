@@ -19,7 +19,6 @@ const CreditCardWidget = ({ setCreditCardInformation }) => {
     }
     setCurrentYear(years);
   }, []);
-  console.log(currentYear);
   return (
     <div className={clsx(styles.card_Wrapper)}>
       <h6 className="border-bottom pb-2 mb-3 text-capitalize">

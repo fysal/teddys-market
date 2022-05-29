@@ -174,3 +174,22 @@ ul.country-list {
 .slider-control-centerleft button:hover {
 opacity : 1 !important
 }
+
+.floating_cart {
+  position: fixed;
+  right: 0;
+  top: 20%;
+  background: #FE4848;
+  color: #fff;
+  padding: 10px;
+  z-index: 5;
+  border-radius: 5px 0 0 5px;
+  box-shadow: 0 0 6px rgb(0 0 0 / 30%)
+}
+
+.floating_cart .material-symbols-outlined {
+  font-variation-settings: 'FILL'0,
+    'wght'200,
+    'GRAD'200,
+    'opsz'48
+}

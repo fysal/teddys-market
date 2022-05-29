@@ -170,8 +170,6 @@ const Checkout = ({ location }) => {
   }
   async function showPosition(position) {
   //Adding to the location 
-   console.log(position.coords.latitude)
-   console.log(position.coords.longitude);
    const latLng = `${position.coords.latitude} , ${position.coords.longitude}`;
    await updateUserLocation(currentUser?.userId, latLng);
   }
@@ -205,6 +203,11 @@ const Checkout = ({ location }) => {
                 {[
                   { name: "mobile money", icon: "payments", id: 1 },
                   { name: "credit card", icon: "credit_card", id: 2 },
+                  // {
+                  //   name: "cash on delivery",
+                  //   icon: "account_balance_wallet",
+                  //   id: 3,
+                  // },
                 ].map((option) => (
                   <div
                     className={clsx(
@@ -233,13 +236,13 @@ const Checkout = ({ location }) => {
                     useDefaultNumber={useDefaultNumber}
                     setUseDefaultNumber={setUseDefaultNumber}
                   />
-                ) : (
+                ) : paymentOption === "credit card" ?  (
                   <CreditCardWidget
                     setCreditCardInformation={setCreditCardInformation}
                   />
-                )}
+                ) :  null}
               </div>
-           
+
               <div className={clsx("mt-5 small text-capitalize")}>
                 <h6 className="border-bottom pb-3 text-capitalize">
                   Billing address
@@ -294,7 +297,6 @@ const Checkout = ({ location }) => {
                 <button
                   className="btn btn-primary btn-sm text-uppercase"
                   onClick={makePayment}
-                 
                 >
                   Place order
                 </button>

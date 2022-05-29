@@ -20,8 +20,8 @@ const CartPage = () => {
   const { cartItems, setCartItems } = useContext(CartContext);
   const { groceries, setGroceries } = useContext(ProductContext);
   const [deliveryMethod, setDeliveryMethod] = useState({
-    type: "Standard delivery (5000)",
-    amount:  5000});
+    type: "Standard delivery (10000)",
+    amount:  10000});
   const [subTotal, setsubTotal] = useState(0);
   const [finalTotal, setFinalTotal] = useState(0);
   const [message, setMessage] = useState(null);
@@ -72,9 +72,9 @@ computeTotal()
   }
 
 const onDeliveryMethodChange = (e) => {
-  if(e.target.value === "Standard delivery (5000)")
-   setDeliveryMethod({type: "Standard delivery (5000)", amount : 5000});
-   else setDeliveryMethod({type : "Express delivery", amount :10000 })
+  if(e.target.value === "Standard delivery (10000)")
+   setDeliveryMethod({type: "Standard delivery (5000)", amount : 10000});
+   else setDeliveryMethod({type : "Standard delivery", amount :10000 })
 }
 
   const goToCheckout = () => {
@@ -274,7 +274,7 @@ const onDeliveryMethodChange = (e) => {
                 className="form-select"
                 onChange={onDeliveryMethodChange}
               >
-                {["Standard delivery (5000)", "Express delivery (10000)"].map(
+                {["Standard delivery (10000)"].map(
                   (item, index) => (
                     <option key={index} value={item}>
                       {item}
