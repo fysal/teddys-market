@@ -5,6 +5,7 @@ import SelectFilter from "../components/form/widgets/SelectFilter";
 import { fetchGroceries } from "../utils/userHandler";
 import SpinLoader from "../components/SpinLoader";
 import NoResults from "../components/NoResults.component";
+import FloatingCart from "../components/FloatingCart.component";
 
 const Search = ({ location }) => {
   const { groceries, setGroceries } = useContext(ProductContext);
@@ -101,7 +102,7 @@ const Search = ({ location }) => {
     setGroceryList([...groceries]);
   };
 
-  return (
+  return (<>
     <div className="container py-5">
       {!fetching ? (
         <div className="">
@@ -132,6 +133,8 @@ const Search = ({ location }) => {
         <SpinLoader />
       )}
     </div>
+    <FloatingCart />
+    </>
   );
 };
 

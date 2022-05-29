@@ -11,7 +11,7 @@ import MyAccount from "./MyAccount.page";
 import Orders from "./Orders.page";
 import OrderDetails from "./OrderDetails.page";
 import TrackOrder from "./TrackOrder.page";
-import Search from "./Search.page";
+import ProductsPage from "./Products.page";
 import PageNotFound from "./PageNotFound.page";
 
 
@@ -34,7 +34,7 @@ const MainRoutes = () => {
           component={OrderDetails}
         />
         <ProtectedRoutes path="/customer/order/track" component={TrackOrder} />
-        <Route path="/products" component={Search} />
+        <Route path="/products" component={ProductsPage} />
         <Route component={PageNotFound} />
       </Switch>
     </MainLayout>
