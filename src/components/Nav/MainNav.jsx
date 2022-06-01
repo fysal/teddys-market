@@ -27,7 +27,7 @@ const MainNav = () => {
           <SearchBar />
         </div>
         <div className="col-sm-12 col-md-2">
-          <div className={clsx(styles.contact, "d-flex align-items-center")}>
+          <div className={clsx(styles.contact, "d-flex align-items-center flex-wrap")}>
             <span className={clsx(styles.callBtn, "material-icons-outlined")}>
               phone_in_talk
             </span>

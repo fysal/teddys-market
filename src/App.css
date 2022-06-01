@@ -17,6 +17,9 @@ a {
 a:hover {
   color: inherit;
 }
+.main-menu {
+  z-index: 100;
+}
 
 .container {
   max-width: 1120px;
@@ -196,9 +199,9 @@ opacity : 1 !important
 
 .search-drop {
   position: absolute;
-  bottom: -52px;
+  bottom: -60%;
   width: 100%;
-  z-index: 3;
+  z-index: 1;
   background: #356227;
   padding: 10px 0;
   visibility: hidden;

@@ -7,6 +7,7 @@ import a from '../assets/icons/a.png';
 import s from '../assets/icons/s.png';
 import p from '../assets/icons/p.png';
 import n from '../assets/icons/n.png';
+import { useMediaQuery } from 'react-responsive';
 
 const BestFoodComponent = () => {
   const data = [
@@ -35,20 +36,22 @@ const BestFoodComponent = () => {
       info: `Maximus, purus quis tincidunt semper, felis tellus mole stie nulla, in finibus erat magna et tortor phasellus a magna lobortis`,
     },
   ];
+  const isSmallScreen  = useMediaQuery({ query : '(max-width : 767px)'});
+  const isBigScreen = useMediaQuery({ query : '(min-width : 768px)'})
 
   return (
     <div
-      className={clsx(styles.bestFood,"pb-5")}
+      className={clsx(styles.bestFood, "pb-5")}
       style={{ backgroundImage: `url(${bgSerpia})` }}
     >
-      <div className="text-center">
+      <div className="text-center position-relative">
         <h4 className="text-capitalize">We grow best food</h4>
         <p className="small">
           Lorem ipsum dolor sit amet, consectetur elit sed do eiusmod tempor
           incididunt
         </p>
       </div>
-      <div className="row container pb-5">
+      <div className="row container pb-5 position-relative">
         <div className="col-sm-12 col-md-4">
           {data.slice(0, 2).map((item, index) => (
             <div key={index} className="d-flex align-items-start text-start">
@@ -70,7 +73,14 @@ const BestFoodComponent = () => {
         </div>
         <div className="col-sm-12 col-md-4">
           {data.slice(2, 4).map((item, index) => (
-            <div key={index} className="d-flex align-items-start text-end">
+            <div
+              key={index}
+              className={clsx(
+                "d-flex align-items-start ",
+                isBigScreen && "text-end",
+                isSmallScreen && "flex-row-reverse"
+              )}
+            >
               <div className="me-3 mb-3">
                 <div className={styles.num}>{item.num}</div>
                 <div

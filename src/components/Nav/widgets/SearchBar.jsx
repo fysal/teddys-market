@@ -16,6 +16,7 @@ const SearchBar = () => {
       });
       setSearchText("");
     }
+    document.querySelector(".search-drop").classList.remove("show");
   };
   const onChange = (e) => setSearchText(e.target.value);
   return (
