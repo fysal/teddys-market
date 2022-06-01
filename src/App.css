@@ -193,3 +193,30 @@ opacity : 1 !important
     'GRAD'200,
     'opsz'48
 }
+
+.search-drop {
+  position: absolute;
+  bottom: -52px;
+  width: 100%;
+  z-index: 3;
+  background: #356227;
+  padding: 10px 0;
+  visibility: hidden;
+  height:0;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+
+}
+.search-drop::after {
+  content:"";  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom : 10px solid #356227;
+  top: -8px;
+  right:3%;
+  position: absolute;
+}
+.search-drop.show{
+  visibility: visible;
+  height: auto;
+  opacity: 1;
+}

@@ -107,7 +107,7 @@ const Search = ({ location }) => {
       {!fetching ? (
         <div className="">
           <div className="bg-white rounded-2">
-            <div className="d-flex align-items-center justify-content-between   border-bottom pt-3 px-4">
+            <div className="d-flex align-items-center justify-content-between flex-wrap   border-bottom pt-3 px-4">
               <h5 className="">All Products</h5>
                 <SelectFilter
                   placeholder="Filter by category"
@@ -116,7 +116,7 @@ const Search = ({ location }) => {
                   onChange={filterByCategory}
                 />
               <button
-                className="btn btn-sm btn-danger float-end"
+                className="btn btn-sm btn-danger float-end mb-3"
                 onClick={resetList}
               >
                 <span className="small">Clear search</span>

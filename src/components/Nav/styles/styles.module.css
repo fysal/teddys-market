@@ -110,3 +110,13 @@
 
 .dropdownItems{ font-size: 12px;}
 
+
+@media only screen and (max-width : 767px){
+    .cart_ {
+        width: 35px;
+        height: 35px;
+    }
+    .nav_search{
+        padding: 2px;
+    }
+}
