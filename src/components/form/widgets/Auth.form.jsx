@@ -8,9 +8,10 @@ import SpinLoader from "../../SpinLoader";
 import errorHandler from "../../../utils/firebaseErrorHandler";
 import {  loginWithEmailAndPassword, signupUserWithEmailAndPassword } from "../../../utils/userHandler";
 import regionsList from "../../../utils/regionsList.json"
-
+import { useMediaQuery } from "react-responsive";
 import { UserContext } from "../../../utils/UserContext";
 import countries from "../../../utils/countries.json";
+import clsx from "clsx";
 
 const AuthForm = ({location}) => {
   console.log(location)
@@ -19,7 +20,6 @@ const AuthForm = ({location}) => {
   const [isLoggingIn, setIsLoggingIn] = useState(
     isLogginState === null ? true : isLogginState
   );
-  console.log(isLoggingIn)
   const [loadingState, setLoadingState] = useState(false);
   const [formData, setFormData] = useState({
     email: null,
@@ -31,6 +31,8 @@ const AuthForm = ({location}) => {
     countryName: null,
     address: null,
   });
+
+  const isBigScreen = useMediaQuery({ query : '(min-width: 800px)'})
   const [formError, setFormError] = useState("");
   const onChange = (e) => {
     setFormError("");
@@ -89,7 +91,12 @@ const AuthForm = ({location}) => {
     setLoadingState(false);
   };
   return (
-    <div className="form_wrapper p-5 m-auto w-50 text-center">
+    <div
+      className={clsx(
+        "form_wrapper p-5 m-auto text-center",
+        isBigScreen && "w-50"
+      )}
+    >
       {formError !== "" && (
         <div className="alert alert-danger alert-dismissible fade show">
           {formError}
