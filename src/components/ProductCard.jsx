@@ -55,7 +55,7 @@ const ProductCard = ({ groceries }) => {
       {groceries
         .sort((a, b) => a.itemName.toLowerCase().localeCompare(b.itemName.toLowerCase()))
         .map((grocery) => (
-          <div key={grocery.itemId} className="col-xs-6 col-sm-6 col-md-3">
+          <div key={grocery.itemId} className="col-sm-6 col-md-3">
             <div className={clsx(Styles.product_card, " p-3 text-center mb-4")}>
               <div className="d-flex align-items-center justify-content-between">
                 <span className={Styles.new}>New</span>

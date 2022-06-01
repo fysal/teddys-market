@@ -27,7 +27,7 @@ const GiftStrip = () => {
         <div className={clsx(styles.shop, "text-uppercase")}>shop now</div>
 
         <div className={clsx(styles.popul)}>
-          Popular and <br /> Trending Products
+          Popular and {isBigScreen && <br /> } Trending Products
         </div>
         <div className={clsx(styles.img_wrap, "flex-1")}>
           <img src={basket} className={clsx(styles.img)} />
