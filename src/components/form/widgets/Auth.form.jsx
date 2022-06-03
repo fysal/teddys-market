@@ -14,7 +14,6 @@ import countries from "../../../utils/countries.json";
 import clsx from "clsx";
 
 const AuthForm = ({location}) => {
-  console.log(location)
   const isLogginState  = location.state;
   const { currentUser, setCurrentUser } = useContext(UserContext);
   const [isLoggingIn, setIsLoggingIn] = useState(
