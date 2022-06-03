@@ -24,6 +24,7 @@
 .activeTab {
     border-bottom: 3px solid #8DCA57 !important
 }
+.tabs_wrapper{ overflow-x: scroll; width: 100%}
 
 :is(.new, .off) {
     font-size: 11px;

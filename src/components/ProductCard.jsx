@@ -63,7 +63,7 @@ const ProductCard = ({ groceries }) => {
             a.itemName.toLowerCase().localeCompare(b.itemName.toLowerCase())
           )
           .map((grocery) => (
-            <div key={grocery.itemId} className="col-sm-6 col-md-3">
+            <div key={grocery.itemId} className="col-sm-6 col-md-4 col-lg-3">
               <div
                 className={clsx(Styles.product_card, " p-3 text-center mb-4")}
               >

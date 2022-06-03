@@ -93,7 +93,7 @@ const Products = () => {
           At vero eos et accusamus et iusto odio dignissimos ducimus qui
           blanditiis praesentium.
         </p>
-        <div className="d-flex align-items-center justify-content-between mt-5 flex-wrap">
+        <div className={clsx(Styles.tabs_wrapper,"d-flex align-items-center justify-content-between mt-5 hide-scrollbar")}>
           {tabs.map((tab) => (
             <div
               className={clsx(
