@@ -47,8 +47,7 @@ const BestFoodComponent = () => {
       <div className="text-center position-relative">
         <h4 className="text-capitalize">We grow best food</h4>
         <p className="small">
-          Lorem ipsum dolor sit amet, consectetur elit sed do eiusmod tempor
-          incididunt
+          We guarantee to deliver quality, healthy and fresh products to all our customers.
         </p>
       </div>
       <div className="row container pb-5 position-relative">

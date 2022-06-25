@@ -90,8 +90,7 @@ const Products = () => {
       <div className="container text-center mt-5">
         <h4 className="">Discover Our Products</h4>
         <p className="text-muted small">
-          At vero eos et accusamus et iusto odio dignissimos ducimus qui
-          blanditiis praesentium.
+          All our products are organically grown, healthy and delivered to you fresh straight from the garden.
         </p>
         <div className={clsx(Styles.tabs_wrapper,"d-flex align-items-center justify-content-between mt-5 hide-scrollbar")}>
           {tabs.map((tab) => (

@@ -5,7 +5,8 @@ import { useMediaQuery } from 'react-responsive';
 const FloatingCart = () => {
   const { cartItems } = useContext(CartContext);
   const { currentUser } = useContext(UserContext);
- const isBigScreen = useMediaQuery({ query : '(min-width:800px)'})
+ const isBigScreen = useMediaQuery({ query : '(min-width:800px)'});
+ 
   return (
     <>
       {currentUser && cartItems?.items?.length > 0 && isBigScreen && (

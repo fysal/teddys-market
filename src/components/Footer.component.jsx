@@ -10,22 +10,26 @@ import mail from "../assets/icons/mail.png";
 import clock from "../assets/icons/clock.png";
 import clsx from "clsx";
 import paymentsImage from "../assets/images/payments.png";
+import googlePlayButton from '../assets/images/google_play_button.png';
+import { Link } from "react-router-dom";
+
+
 const Footer = () => {
   const footerTop = [
     {
       icon: f1,
       title: "Flexible payment",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet tellus mauris",
+      text: "With just a press of a button you will be ready to go.",
     },
     {
       icon: f2,
       title: "Delivery at your doorstep",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet tellus mauris",
+      text: "Our experienced riders will find you no matter where you are.",
     },
     {
       icon: f3,
-      title: "Money back guarantee",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet tellus mauris",
+      title: "Quality service guaranteed",
+      text: "We make a promise to deliver fresh, healthy products.",
     },
   ];
   const customercare = [
@@ -158,6 +162,15 @@ const Footer = () => {
               Copyright {new Date().getFullYear()} © teddy's freshmarket. All
               rights reserved
             </div>
+            <Link
+              to={{
+                pathname:
+                  "https://play.google.com/store/apps/details?id=com.teddys.freshmarket",
+              }}
+              target="_blank"
+            >
+              <img src={googlePlayButton} width="110" />
+            </Link>
             <img src={paymentsImage} width="310" />
           </div>
         </div>
