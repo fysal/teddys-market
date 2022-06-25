@@ -122,7 +122,7 @@ const onDeliveryMethodChange = (e) => {
                   <span className="small">{cartItems.items.length} Items</span>
                 </div>
                 {cartItems.items.length > 0 ? (
-                  <>
+                  <div className={clsx(style.cart_table_wrapper,"hide-scrollbar")}>
                     <table className="table cart_table ">
                       <thead>
                         <tr>
@@ -232,7 +232,7 @@ const onDeliveryMethodChange = (e) => {
                         ))}
                       </tbody>
                     </table>
-                  </>
+                  </div>
                 ) : (
                   <div className="d-flex align-items-center justify-content-between flex-column">
                     <lord-icon
